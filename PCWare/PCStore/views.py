@@ -7,4 +7,4 @@ from django.shortcuts import render
 
 
 def register(request):
-    return HttpResponse("Register page!")
+    return render(request, "register.html")
