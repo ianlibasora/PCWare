@@ -6,4 +6,3 @@ urlpatterns = [
     path('', views.index, name="index-page"),
     path("register", views.register, name="registration-page")
 ]
-
