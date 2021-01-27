@@ -1,5 +1,6 @@
 .idea
 .vscode
-PCWare/PCWare/__pycache__
+PCWare/PCWare/__pycache__/
+PCWare/PCStore/__pycache__
 PCStore/__pycache__/
-PCStore/migrations/__pycache__/
+PCWare/PCStore/migrations/__pycache__/
