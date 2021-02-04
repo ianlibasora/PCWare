@@ -43,3 +43,16 @@ class User(models.Model):
     addressId = models.ForeignKey(Address, on_delete=models.CASCADE)
     paymentId = models.ForeignKey(Payment, on_delete=models.CASCADE)
 
+
+class Order(models.Model):
+    orderID = models.AutoField(primary_key=True)
+    userID = models.ForeignKey(User, on_delete=models.CASCADE)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+    date = models.DateTimeField(auto_now_add=True, blank=True)
+
+
+class OrderItem(models.Model):
+    orderItemID = models.AutoField(primary_key=True)
+    orderID = models.ForeignKey(Order, on_delete=models.CASCADE)
+    productID = models.ForeignKey(Product, on_delete=models.CASCADE)
+
