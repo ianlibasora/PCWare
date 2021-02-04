@@ -55,4 +55,19 @@ class OrderItem(models.Model):
     orderItemID = models.AutoField(primary_key=True)
     orderID = models.ForeignKey(Order, on_delete=models.CASCADE)
     productID = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
+
+
+class Cart(models.Model):
+    cartID = models.AutoField(primary_key=True)
+    userID = models.ForeignKey(User, on_delete=models.CASCADE)
+    orderID = models.ForeignKey(Order, on_delete=models.CASCADE)
+    total = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+class CartItem(models.Model):
+    cartItemID = models.AutoField(primary_key=True)
+    cartID = models.ForeignKey(Cart, on_delete=models.CASCADE)
+    productID = models.ForeignKey(Product, on_delete=models.CASCADE)
+    quantity = models.IntegerField()
 
