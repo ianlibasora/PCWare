@@ -70,7 +70,7 @@ class User(AbstractUser):
     # firstName = models.CharField(max_length=50)
     # lastName = models.CharField(max_length=50)
     # email = models.EmailField(max_length=254)
-    contactNum = models.IntegerField()
+    # contactNum = models.IntegerField()
     isAdmin = models.BooleanField(default=False)
     # addressId = models.ForeignKey(Address, on_delete=models.CASCADE)
     # paymentId = models.ForeignKey(Payment, on_delete=models.CASCADE)

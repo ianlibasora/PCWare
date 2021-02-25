@@ -20,4 +20,3 @@ class UserSignUpForm(UserCreationForm):
         user.isAdmin = False
         user.save()
         return user
-

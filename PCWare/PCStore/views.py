@@ -11,8 +11,8 @@ from django.contrib.auth import login
 def index(request):
     return render(request, "index.html")
 
-def register(request):
-    return render(request, "register.html")
+# def register(request):
+#     return render(request, "register.html")
 
 def allProducts(request):
     all_p = Product.objects.all()
