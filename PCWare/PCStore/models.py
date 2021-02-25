@@ -1,3 +1,4 @@
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 # Create your models here.
@@ -16,6 +17,7 @@ class Product(models.Model):
     price = models.DecimalField(max_digits=10, decimal_places=2)
 
 
+# Not active
 class Address(models.Model):
     addressId = models.AutoField(primary_key=True)
     line1 = models.CharField(max_length=100)
@@ -24,6 +26,7 @@ class Address(models.Model):
     postcode = models.CharField(max_length=10)
 
 
+# Not active
 class Payment(models.Model):
     paymentId = models.AutoField(primary_key=True)
     holderName = models.CharField(max_length=200)
@@ -34,19 +37,9 @@ class Payment(models.Model):
     addressId = models.ForeignKey(Address, on_delete=models.CASCADE)
 
 
-class User(models.Model):
-    userId = models.AutoField(primary_key=True)
-    firstName = models.CharField(max_length=50)
-    lastName = models.CharField(max_length=50)
-    email = models.EmailField(max_length=254)
-    contactNum = models.IntegerField()
-    addressId = models.ForeignKey(Address, on_delete=models.CASCADE)
-    paymentId = models.ForeignKey(Payment, on_delete=models.CASCADE)
-
-
 class Order(models.Model):
     orderID = models.AutoField(primary_key=True)
-    userID = models.ForeignKey(User, on_delete=models.CASCADE)
+    # userID = models.ForeignKey(User, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateTimeField(auto_now_add=True, blank=True)
 
@@ -60,7 +53,7 @@ class OrderItem(models.Model):
 
 class Cart(models.Model):
     cartID = models.AutoField(primary_key=True)
-    userID = models.ForeignKey(User, on_delete=models.CASCADE)
+    # userID = models.ForeignKey(User, on_delete=models.CASCADE)
     orderID = models.ForeignKey(Order, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=10, decimal_places=2)
 
@@ -71,3 +64,13 @@ class CartItem(models.Model):
     productID = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
 
+
+class User(AbstractUser):
+    # userId = models.AutoField(primary_key=True)
+    # firstName = models.CharField(max_length=50)
+    # lastName = models.CharField(max_length=50)
+    # email = models.EmailField(max_length=254)
+    contactNum = models.IntegerField()
+    isAdmin = models.BooleanField(default=False)
+    # addressId = models.ForeignKey(Address, on_delete=models.CASCADE)
+    # paymentId = models.ForeignKey(Payment, on_delete=models.CASCADE)
