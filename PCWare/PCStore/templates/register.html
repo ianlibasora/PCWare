@@ -1,8 +1,12 @@
 {% extends "base.html" %}
 
-
 {% block title %}Registration page{% endblock %}
 
 {% block content %}
-<body> Please login with your username and password </body>
+        <h3>Register a new user. </h3>
+        <form action="." method="POST">
+           {% csrf_token %}
+           {{  form.as_table }}
+           <button type="submit">Submit</button>
+        </form>
 {% endblock %}
