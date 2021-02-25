@@ -18,8 +18,6 @@ def index(request):
 #     return render(request, "register.html")
 
 
-@login_required()
-# @admin_required()
 def allProducts(request):
     all_p = Product.objects.all()
     return render(request, 'all_products.html', {'products': all_p})
@@ -30,6 +28,8 @@ def singleProduct(request, prodId):
     return render(request, 'single_product.html', {'product': prod})
 
 
+@login_required
+@admin_required
 def productCategoryForm(request):
     if request.method == 'POST':
         form = ProductCategoryForm(request.POST)
