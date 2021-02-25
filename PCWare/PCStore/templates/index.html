@@ -6,9 +6,9 @@
 
     {% if user.is_authenticated %}
         <h1>Hello {{ user.username }}</h1>
-        <a href="#">Logout</a>
+        <a href="/logout">Logout</a>
     {% else %}
-        <a href="#">Login</a>
+        <a href="/login">Login</a>
     {% endif %}
 
 {% endblock %}

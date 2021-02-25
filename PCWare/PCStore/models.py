@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
+
 # Create your models here.
 class ProductCategory(models.Model):
     categoryID = models.AutoField(primary_key=True)
@@ -15,6 +16,7 @@ class Product(models.Model):
     categoryID = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
     stock = models.IntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
+    picture = models.FileField(upload_to='productImg')
 
 
 # Not active

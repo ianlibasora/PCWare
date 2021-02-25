@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from .models import *
-from django.contrib.auth.forms import UserCreationForm
+from django import forms
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.db import transaction
 
 
@@ -20,3 +21,9 @@ class UserSignUpForm(UserCreationForm):
         user.isAdmin = False
         user.save()
         return user
+
+class UserLoginForm(AuthenticationForm):
+    def __init_(self, *args, **kwargs):
+        super(UserLoginForm, self).__init__(*args, **kwargs)
+    username = forms.TextInput(attrs={'class': 'form-control', 'placeholder': '', 'id': 'hello'})
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '', 'id': 'howdy'}))
