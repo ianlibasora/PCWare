@@ -1,8 +1,11 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}Index homepage{% endblock %}
 {% block content %}
     <p>Hello index world</p>
+    <img src="{%  static '/images/test.jpeg' %}">
 
     {% if user.is_authenticated %}
         <h1>Hello {{ user.username }}</h1>
@@ -10,5 +13,6 @@
     {% else %}
         <a href="/login">Login</a>
     {% endif %}
+
 
 {% endblock %}
