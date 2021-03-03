@@ -33,7 +33,7 @@ def productCategoryForm(request):
 
         if form.is_valid():
             new_product = form.save()
-            return render(request, 'single-product.html', {'product': new_product})
+            return redirect("/")
 
     else:
         form = ProductCategoryForm()
