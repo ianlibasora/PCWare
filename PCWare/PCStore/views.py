@@ -17,12 +17,12 @@ def index(request):
 
 def allProducts(request):
     all_p = Product.objects.all()
-    return render(request, 'all_products.html', {'products': all_p})
+    return render(request, 'all-products.html', {'products': all_p})
 
 
 def singleProduct(request, prodId):
     prod = get_object_or_404(Product, pk=prodId)
-    return render(request, 'single_product.html', {'product': prod})
+    return render(request, 'single-product.html', {'product': prod})
 
 
 @login_required
@@ -33,11 +33,11 @@ def productCategoryForm(request):
 
         if form.is_valid():
             new_product = form.save()
-            return render(request, 'single_product.html', {'product': new_product})
+            return render(request, 'single-product.html', {'product': new_product})
 
     else:
         form = ProductCategoryForm()
-        return render(request, 'category_form.html', {'form': form})
+        return render(request, 'category-form.html', {'form': form})
 
 
 @login_required
@@ -48,7 +48,7 @@ def productForm(request):
 
         if form.is_valid():
             new_product = form.save()
-            return render(request, 'single_product.html', {'product': new_product})
+            return render(request, 'single-product.html', {'product': new_product})
 
     else:
         form = ProductForm()

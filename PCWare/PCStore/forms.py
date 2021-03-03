@@ -28,6 +28,7 @@ class UserSignUpForm(UserCreationForm):
         user.save()
         return user
 
+
 class UserLoginForm(AuthenticationForm):
     def __init_(self, *args, **kwargs):
         super(UserLoginForm, self).__init__(*args, **kwargs)

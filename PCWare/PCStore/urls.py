@@ -6,7 +6,7 @@ from .forms import UserLoginForm
 urlpatterns = [
     path('', views.index, name="index-page"),
     path("all-products/", views.allProducts, name="all-products"),
-    path('singleproduct/<int:prodId>/', views.singleProduct, name='single-product'),
+    path('single-product/<int:prodId>/', views.singleProduct, name='single-product'),
 
     # Forms
     path('category-form/', views.productCategoryForm, name='category-form'),
