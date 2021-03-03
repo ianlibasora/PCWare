@@ -10,6 +10,7 @@ urlpatterns = [
 
     # Forms
     path('category-form/', views.productCategoryForm, name='category-form'),
+    path("product-form/", views.productForm, name="product-form"),
 
     # Register/Login views
     path("register/", views.UserSignUp.as_view(), name="registration-page"),

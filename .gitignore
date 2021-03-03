@@ -5,3 +5,5 @@ PCWare/PCStore/__pycache__
 PCStore/__pycache__/
 PCWare/PCStore/migrations/__pycache__/
 PCWare/__pycache__/
+#Media dir should be ignored, commit for now
+#PCWare/media/productImg/*.png

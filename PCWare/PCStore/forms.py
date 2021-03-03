@@ -11,6 +11,12 @@ class ProductCategoryForm(ModelForm):
         fields = {'categoryName', 'categoryDetails'}
 
 
+class ProductForm(ModelForm):
+    class Meta:
+        model = Product
+        fields = {"productName", "productDetails", "stock", "price", "picture"}
+
+
 class UserSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User

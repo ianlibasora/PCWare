@@ -1,11 +1,11 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Single product page
+    Products
 {% endblock %}
-
 {% block content %}
-    <p>Product name: {{ product.name }}<br/>
+    <p>Product name: {{ product.productName }}<br/>
     Description: {{ product.productDetails }}<br/>
-    Price: {{ product.price }}</p>
+    Price: {{ product.price }} {{ product.picture.url }}</p>
+    <img src="{{ product.picture.url }}">
 {% endblock %}

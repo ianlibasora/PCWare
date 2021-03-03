@@ -14,9 +14,6 @@ from django.contrib.auth.views import LoginView
 def index(request):
     return render(request, "index.html")
 
-# def register(request):
-#     return render(request, "register.html")
-
 
 def allProducts(request):
     all_p = Product.objects.all()
@@ -41,6 +38,21 @@ def productCategoryForm(request):
     else:
         form = ProductCategoryForm()
         return render(request, 'category_form.html', {'form': form})
+
+
+@login_required
+@admin_required
+def productForm(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+
+        if form.is_valid():
+            new_product = form.save()
+            return render(request, 'single_product.html', {'product': new_product})
+
+    else:
+        form = ProductForm()
+        return render(request, 'product-form.html', {'form': form})
 
 
 class UserSignUp(CreateView):

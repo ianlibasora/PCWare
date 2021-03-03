@@ -123,7 +123,7 @@ STATIC_URL = '/static/'
 
 AUTH_USER_MODEL = "PCStore.User"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-MEDIA_URL = './media/'
+MEDIA_URL = '/media/'
 
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/'

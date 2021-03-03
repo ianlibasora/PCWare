@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block title %}Product Category Form{% endblock %}
+{% block content %}
+    <form action="/product-form/" method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{  form.as_table }}
+    <input type="submit" value="Submit">
+    </form>
+{% endblock %}
