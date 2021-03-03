@@ -2,7 +2,10 @@
 
 {% load static %}
 
-{% block title %}Index homepage{% endblock %}
+{% block title %}
+    Index homepage
+{% endblock %}
+
 {% block content %}
     <p>Hello index world</p>
     <img src="{%  static '/images/test.jpeg' %}">
@@ -13,6 +16,4 @@
     {% else %}
         <a href="/login">Login</a>
     {% endif %}
-
-
 {% endblock %}

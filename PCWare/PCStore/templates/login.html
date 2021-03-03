@@ -1,9 +1,10 @@
 {% extends "base.html" %}
 
-{% block title %}Login Page{% endblock %}
+{% block title %}
+    Login Page
+{% endblock %}
 
 {% block content %}
-
         <form action="." method="POST">
            {% csrf_token %}
            {{  form.as_table }}
