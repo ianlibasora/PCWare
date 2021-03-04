@@ -15,5 +15,8 @@ urlpatterns = [
     # Register/Login views
     path("register/", views.UserSignUp.as_view(), name="registration-page"),
     path('login/', views.Login.as_view(template_name="login.html", authentication_form=UserLoginForm), name='login'),
-    path('logout/', views.logout_view, name="logout")
+    path('logout/', views.logout_view, name="logout"),
+
+    # Shop urls
+    path("add-cart/<int:productID>", views.addCart, name="Add to cart")
 ]

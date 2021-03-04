@@ -4,6 +4,10 @@
     Products
 {% endblock %}
 {% block content %}
+    {% if Added %}
+       <p>Added {{ product.productName }} to cart.</p>
+    {% endif %}
+
     {% for p in products %}
         <div>
             Name {{ p.productName }}<br/>

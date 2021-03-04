@@ -9,4 +9,5 @@
     Price: {{ product.price }} {{ product.picture.url }}</p>
     <img src="{{ product.picture.url }}">
     <p>Category: {{ product.category.categoryName }}</p>
+    <a href="/add-cart/{{ product.productID }}">Buy for {{ product.price }}</a>
 {% endblock %}
