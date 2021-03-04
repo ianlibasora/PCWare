@@ -85,7 +85,7 @@ def addCart(request, productID):
     if not cart:
         cart = Cart(userID=user).save()
     item = get_object_or_404(Product, pk=productID)
-    cartItem = CartItem.objects.filter(cartID=cart.cartID, productID=item.productID)
+    cartItem = CartItem.objects.filter(cartID=cart.cartID, productID=item.productID).first()
 
     if not cartItem:
         cartItem = CartItem(cartID=cart, productID=item).save()
@@ -93,3 +93,15 @@ def addCart(request, productID):
         cartItem.quantity += 1
         cartItem.save()
     return render(request, "all-products.html", {"product": item, "Added": True})
+
+
+def showBasket(request):
+    user = request.user
+    cart = Cart.objects.filter(userID=user).first()
+
+    if not cart:
+        cart = Cart(userID=user).save()
+
+    cartItem = CartItem.objects.filter(cartID=cart.cartID)
+
+    return render(request, 'basket.html', {'cart': cartItem})

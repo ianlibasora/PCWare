@@ -18,5 +18,8 @@ urlpatterns = [
     path('logout/', views.logout_view, name="logout"),
 
     # Shop urls
-    path("add-cart/<int:productID>", views.addCart, name="Add to cart")
+    path("add-cart/<int:productID>", views.addCart, name="Add to cart"),
+
+    # Payment/Address
+    path("view-basket/", views.showBasket, name="checkout"),
 ]
