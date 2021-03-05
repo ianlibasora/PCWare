@@ -1,8 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.template.response import TemplateResponse
 from django.views.generic import CreateView
 from .models import *
 from .forms import *
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .permissions import *
@@ -105,3 +106,24 @@ def showBasket(request):
     cartItem = CartItem.objects.filter(cartID=cart.cartID)
 
     return render(request, 'basket.html', {'cart': cartItem})
+
+
+def getCheckout(request):
+    if request.method == 'POST':
+        form = ProductForm(request.POST, request.FILES)
+
+        address_form = AddressForm(request.POST)
+        payment_form = PaymentForm(request.POST)
+
+        if address_form.is_valid() and payment_form.is_valid():
+            address_form.save()
+            payment_form.save()
+            return HttpResponseRedirect('/order-success')
+
+    else:
+        content = {
+            'address_form': AddressForm(),
+            'payment_form': PaymentForm(),
+        }
+
+    return TemplateResponse(request, 'checkout.html', content)

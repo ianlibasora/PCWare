@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Checkout
+{% endblock %}
+
+{% block content %}
+{#    enctype="multipart/form-data"  #}
+    <form action="/checkout/" method="post">
+    {% csrf_token %}
+    {{ payment_form.as_p }}
+    {{ address_form.as_p }}
+    <input type="submit" value="Submit">
+    </form>
+{% endblock %}

@@ -21,7 +21,6 @@ class Payment(models.Model):
     expireMonth = models.IntegerField()
     expireYear = models.IntegerField()
     cvv = models.IntegerField()
-    addressId = models.ForeignKey(Address, on_delete=models.CASCADE)
 
 
 class User(AbstractUser):

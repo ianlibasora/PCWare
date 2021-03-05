@@ -40,3 +40,15 @@ class UserLoginForm(AuthenticationForm):
         super(UserLoginForm, self).__init__(*args, **kwargs)
     username = forms.TextInput(attrs={'class': 'form-control', 'placeholder': '', 'id': 'hello'})
     password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': '', 'id': 'howdy'}))
+
+
+class AddressForm(ModelForm):
+    class Meta:
+        model = Address
+        fields = {"line1", "line2", "line3", "postcode"}
+
+
+class PaymentForm(ModelForm):
+    class Meta:
+        model = Payment
+        fields = {"holderName", "cardNum", "expireMonth", "expireYear", "cvv"}
