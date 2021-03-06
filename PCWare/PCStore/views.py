@@ -83,19 +83,22 @@ def logout_view(request):
 def addCart(request, productID):
     user = request.user
     cart = Cart.objects.filter(userID=user).first()
-    if not cart:
-        cart = Cart(userID=user).save()
+    if cart is None:
+        Cart(userID=user).save()
+        cart = Cart.objects.filter(userID=user).first()
     item = get_object_or_404(Product, pk=productID)
-    cartItem = CartItem.objects.filter(cartID=cart.cartID, productID=item.productID).first()
+    cartItem = CartItem.objects.filter(cartID=cart, productID=item.productID).first()
 
-    if not cartItem:
-        cartItem = CartItem(cartID=cart, productID=item).save()
+    if cartItem is None:
+        CartItem(cartID=cart, productID=item).save()
+        cartItem = CartItem.objects.filter(cartID=cart, productID=item).first()
     else:
         cartItem.quantity += 1
         cartItem.save()
     return render(request, "all-products.html", {"product": item, "Added": True})
 
 
+@login_required
 def showBasket(request):
     user = request.user
     cart = Cart.objects.filter(userID=user).first()
@@ -108,22 +111,40 @@ def showBasket(request):
     return render(request, 'basket.html', {'cart': cartItem})
 
 
+@login_required
 def getCheckout(request):
     if request.method == 'POST':
-        form = ProductForm(request.POST, request.FILES)
-
         address_form = AddressForm(request.POST)
         payment_form = PaymentForm(request.POST)
 
         if address_form.is_valid() and payment_form.is_valid():
-            address_form.save()
-            payment_form.save()
-            return HttpResponseRedirect('/order-success')
+            addr = address_form.save(commit=False)
+            pay = payment_form.save(commit=False)
+            addr.userID = User.objects.get(userID=request.user)
+            addr.save()
 
+            pay.userID = User.objects.get(userID=request.user)
+            pay.save()
+
+            return redirect("/")
+            # return redirect('order-success/')
     else:
         content = {
             'address_form': AddressForm(),
-            'payment_form': PaymentForm(),
+            'payment_form': PaymentForm()
         }
+    return render(request, 'checkout.html', content)
 
-    return TemplateResponse(request, 'checkout.html', content)
+
+@login_required
+def orderHandler(request, address, payment):
+    user = request.user
+    cart = Cart.objects.filter(userID=user).first()
+    cartItems = CartItem.objects.filter(cartID_id=cart.cartID)
+
+    newOrder = Order(userID=user, addressID=address, paymentID=payment)
+    for item in cartItems:
+        OrderItem(orderID=newOrder.orderID, productID=item.productID, quantity=item.quantity)
+
+    return redirect("/")
+

@@ -21,6 +21,7 @@ urlpatterns = [
     path("add-cart/<int:productID>", views.addCart, name="Add to cart"),
 
     # Payment/Address
-    path("view-basket/", views.showBasket, name="basket"),
-    path("checkout/", views.getCheckout, name="checkout page"),
+    # path("view-basket/", views.showBasket, name="basket"),
+    # path("checkout/", views.getCheckout, name="checkout page"),
+    # path("order-success/", views.orderHandler, name="Order completion")
 ]
