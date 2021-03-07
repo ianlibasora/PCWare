@@ -7,16 +7,20 @@
     <h2>
         Order Summary
     </h2>
-{#    <p>#}
-{#        {% order.userID_id.first_name %} {% order.userID_id.last_name %}<br>#}
-{#        {% order.addressID.line1 %}<br>#}
-{#        {% order.addressID.line2 %}<br>#}
-{#        {% order.adddressID.line3 %}<br>#}
-{#        {% order.addressID.postcode %}#}
-{#    </p>#}
-{#    <p>#}
-{#        Contact details: {% order.userID.contactNum %} {% order.userID.email %}#}
-{#    </p>#}
+    <p>
+        {{ order.userID.first_name }} {{ order.userID.last_name }}<br/>
+        {{ order.addressID.line1 }}<br/>
+        {{ order.addressID.line2 }}<br/>
+        {{ order.addressID.line3 }}<br/>
+        {{ order.addressID.postcode }}
+    </p>
+    <h2>
+        Contact details:
+    </h2>
+    <p>
+        Contact number: {{ order.userID.contactNum }}<br/>
+        Email: {{ order.userID.email }}
+    </p>
 
     {% for p in orderItems %}
         <div>
@@ -27,9 +31,9 @@
         </div>
     {% endfor %}
 
-{#    <p>#}
-{#        Order total: {% order.total %}#}
-{#    </p>#}
+    <p>
+        Order total: {{ order.total }}
+    </p>
 
     <a href="/">Return to Home</a>
 {% endblock %}

@@ -10,10 +10,14 @@
     <p>Hello index world</p>
     <img src="{%  static '/images/test.jpeg' %}">
 
+    <a href="/view-basket">View basket</a>
+
     {% if user.is_authenticated %}
         <h1>Hello {{ user.username }}</h1>
         <a href="/logout">Logout</a>
     {% else %}
         <a href="/login">Login</a>
     {% endif %}
+
+    <a href="all-products/">View all products</a>
 {% endblock %}

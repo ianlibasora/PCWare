@@ -5,14 +5,18 @@
 {% endblock %}
 {% block content %}
 
-    {% for p in cart %}
-        <div>
-            Name: {{ p.productID.productName }}<br/>
-            Quantity: {{ p.quantity }}<br/>
-            Description: {{ p.productID.productDetails }}<br/>
-            Price: {{ p.productID.price }}
-        </div>
-    {% endfor %}
-    <a href="/checkout/">Proceed to checkout</a>
-
+    {% if Content %}
+        {% for p in cart %}
+            <div>
+                Name: {{ p.productID.productName }}<br/>
+                Quantity: {{ p.quantity }}<br/>
+                Description: {{ p.productID.productDetails }}<br/>
+                Price: {{ p.productID.price }}
+            </div>
+        {% endfor %}
+        <a href="/checkout/">Proceed to checkout</a>
+    {% else %}
+        <p>Cart is empty</p>
+    {% endif %}
+    <a href="/all-products">Back to shopping</a>
 {% endblock %}

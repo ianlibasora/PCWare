@@ -4,10 +4,15 @@
     Products
 {% endblock %}
 {% block content %}
-    <p>Product name: {{ product.productName }}<br/>
-    Description: {{ product.productDetails }}<br/>
-    Price: {{ product.price }} {{ product.picture.url }}</p>
-    <img src="{{ product.picture.url }}">
-    <p>Category: {{ product.category.categoryName }}</p>
+    <a href="/view-basket">View basket</a>
+
+    <p>
+        Product name: {{ product.productName }}<br/>
+        Description: {{ product.productDetails }}<br/>
+        Price: {{ product.price }} {{ product.picture.url }}<br/>
+        Category: {{ product.category.categoryName }}<br/>
+        <img src="{{ product.picture.url }}">
+    <p/>
     <a href="/add-cart/{{ product.productID }}">Buy for {{ product.price }}</a>
+    <a href="/all-products">Back to shopping</a>
 {% endblock %}

@@ -18,7 +18,7 @@ def index(request):
 
 def allProducts(request):
     all_p = Product.objects.all()
-    return render(request, 'all-products.html', {'products': all_p})
+    return render(request, 'all-products.html', {'products': all_p, "Message": False})
 
 
 def singleProduct(request, prodId):
@@ -35,7 +35,6 @@ def productCategoryForm(request):
         if form.is_valid():
             new_product = form.save()
             return redirect("/")
-
     else:
         form = ProductCategoryForm()
         return render(request, 'category-form.html', {'form': form})
@@ -75,6 +74,7 @@ class Login(LoginView):
 
 
 def logout_view(request):
+    Cart.objects.filter(userID=request.user).delete()
     logout(request)
     return redirect('/')
 
@@ -82,13 +82,18 @@ def logout_view(request):
 @login_required
 def addCart(request, productID):
     user = request.user
+    all_p = Product.objects.all()
+
     cart = Cart.objects.filter(userID=user).first()
     if cart is None:
         Cart(userID=user).save()
         cart = Cart.objects.filter(userID=user).first()
-    item = get_object_or_404(Product, pk=productID)
-    cartItem = CartItem.objects.filter(cartID=cart, productID=item.productID).first()
 
+    item = get_object_or_404(Product, pk=productID)
+    if item is None:
+        return render(request, 'all-products.html', {'products': all_p, "Message": "Warning. Invalid operation"})
+
+    cartItem = CartItem.objects.filter(cartID=cart, productID=item.productID).first()
     if cartItem is None:
         CartItem(cartID=cart, productID=item).save()
         cartItem = CartItem.objects.filter(cartID=cart, productID=item).first()
@@ -96,7 +101,7 @@ def addCart(request, productID):
         cartItem.quantity += 1
         cartItem.save()
 
-    return redirect("/all-products")
+    return render(request, 'all-products.html', {'products': all_p, "Message": f"Added {item.productName} to caer"})
 
 
 @login_required
@@ -104,12 +109,11 @@ def showBasket(request):
     user = request.user
     cart = Cart.objects.filter(userID=user).first()
 
-    if not cart:
-        cart = Cart(userID=user).save()
+    if cart is None:
+        return render(request, 'basket.html', {'Content': False})
 
     cartItem = CartItem.objects.filter(cartID=cart.cartID)
-
-    return render(request, 'basket.html', {'cart': cartItem})
+    return render(request, 'basket.html', {'cart': cartItem, "Content": True})
 
 
 @login_required

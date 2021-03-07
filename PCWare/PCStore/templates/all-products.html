@@ -4,15 +4,20 @@
     Products
 {% endblock %}
 {% block content %}
-    {% if Added %}
-       <p>Added {{ product.productName }} to cart.</p>
+    {% if Message is not False %}
+        <p>{{ Message }}</p>
     {% endif %}
+
+    <a href="/view-basket">View basket</a>
 
     {% for p in products %}
         <div>
-            Name {{ p.productName }}<br/>
-            Description: {{ p.productDetails }}<br/>
-            Price: {{ p.price }}
+            <p>
+                Name {{ p.productName }}<br/>
+                Description: {{ p.productDetails }}<br/>
+                Price: {{ p.price }}<br/>
+                <a href="/single-product/{{ p.productID }}">more info</a>
+            </p>
         </div>
     {% endfor %}
 {% endblock %}
