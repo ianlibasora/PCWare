@@ -95,7 +95,8 @@ def addCart(request, productID):
     else:
         cartItem.quantity += 1
         cartItem.save()
-    return render(request, "all-products.html", {"product": item, "Added": True})
+
+    return redirect("/all-products")
 
 
 @login_required
@@ -118,33 +119,31 @@ def getCheckout(request):
         payment_form = PaymentForm(request.POST)
 
         if address_form.is_valid() and payment_form.is_valid():
-            addr = address_form.save(commit=False)
-            pay = payment_form.save(commit=False)
-            addr.userID = User.objects.get(userID=request.user)
-            addr.save()
+            addr = address_form.save()
+            pay = payment_form.save()
 
-            pay.userID = User.objects.get(userID=request.user)
-            pay.save()
+            Order(userID=request.user, addressID=addr, paymentID=pay).save()
+            order = Order.objects.filter(userID=request.user).first()
+            cart = Cart.objects.filter(userID=request.user).first()
+            cartItems = CartItem.objects.filter(cartID=cart)
+            total = 0
 
-            return redirect("/")
-            # return redirect('order-success/')
+            # Copy cartItem objects into orderItem objects
+            for item in cartItems:
+                OrderItem(orderID=order, productID=item.productID, quantity=item.quantity).save()
+                total += (item.productID.price * item.quantity)
+            order.total = total
+            order.save()
+
+            # Delete user's `cart`
+            # Note: `cart` deletion cascades to `cartItem`
+            cart.delete()
+            order = Order.objects.filter(userID=request.user).first()
+            orderItems = OrderItem.objects.filter(orderID=order)
+            return render(request, 'order-complete.html', {'order': order, "orderItems": orderItems})
     else:
         content = {
             'address_form': AddressForm(),
             'payment_form': PaymentForm()
         }
     return render(request, 'checkout.html', content)
-
-
-@login_required
-def orderHandler(request, address, payment):
-    user = request.user
-    cart = Cart.objects.filter(userID=user).first()
-    cartItems = CartItem.objects.filter(cartID_id=cart.cartID)
-
-    newOrder = Order(userID=user, addressID=address, paymentID=payment)
-    for item in cartItems:
-        OrderItem(orderID=newOrder.orderID, productID=item.productID, quantity=item.quantity)
-
-    return redirect("/")
-

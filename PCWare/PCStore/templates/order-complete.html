@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Order Summary
+{% endblock %}
+{% block content %}
+    <h2>
+        Order Summary
+    </h2>
+{#    <p>#}
+{#        {% order.userID_id.first_name %} {% order.userID_id.last_name %}<br>#}
+{#        {% order.addressID.line1 %}<br>#}
+{#        {% order.addressID.line2 %}<br>#}
+{#        {% order.adddressID.line3 %}<br>#}
+{#        {% order.addressID.postcode %}#}
+{#    </p>#}
+{#    <p>#}
+{#        Contact details: {% order.userID.contactNum %} {% order.userID.email %}#}
+{#    </p>#}
+
+    {% for p in orderItems %}
+        <div>
+            Name: {{ p.productID.productName }}<br/>
+            Quantity: {{ p.quantity }}<br/>
+            Description: {{ p.productID.productDetails }}<br/>
+            Price: {{ p.productID.price }}
+        </div>
+    {% endfor %}
+
+{#    <p>#}
+{#        Order total: {% order.total %}#}
+{#    </p>#}
+
+    <a href="/">Return to Home</a>
+{% endblock %}

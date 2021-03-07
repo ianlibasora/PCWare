@@ -13,19 +13,20 @@ class CategoryChoiceField(ModelChoiceField):
 class ProductCategoryForm(ModelForm):
     class Meta:
         model = ProductCategory
-        fields = {'categoryName', 'categoryDetails'}
+        fields = ['categoryName', 'categoryDetails']
 
 
 class ProductForm(ModelForm):
     category = CategoryChoiceField(queryset=ProductCategory.objects.all())
     class Meta:
         model = Product
-        fields = {"productName", "productDetails", "category", "stock", "price", "picture"}
+        fields = ["productName", "productDetails", "category", "stock", "price", "picture"]
 
 
 class UserSignUpForm(UserCreationForm):
     class Meta(UserCreationForm.Meta):
         model = User
+        fields = ["username", "first_name", "last_name", "email", "contactNum"]
 
     @transaction.atomic
     def save(self):
@@ -45,10 +46,10 @@ class UserLoginForm(AuthenticationForm):
 class AddressForm(ModelForm):
     class Meta:
         model = Address
-        fields = {"line1", "line2", "line3", "postcode"}
+        fields = ["line1", "line2", "line3", "postcode"]
 
 
 class PaymentForm(ModelForm):
     class Meta:
         model = Payment
-        fields = {"holderName", "cardNum", "expireMonth", "expireYear", "cvv"}
+        fields = ["holderName", "cardNum", "expireMonth", "expireYear", "cvv"]

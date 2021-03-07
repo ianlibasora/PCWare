@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block title %}
-    Cart
+    Shopping Basket
 {% endblock %}
 {% block content %}
 
@@ -12,7 +12,7 @@
             Description: {{ p.productID.productDetails }}<br/>
             Price: {{ p.productID.price }}
         </div>
-
-        <a href="/checkout/">Proceed to checkout</a>
     {% endfor %}
+    <a href="/checkout/">Proceed to checkout</a>
+
 {% endblock %}

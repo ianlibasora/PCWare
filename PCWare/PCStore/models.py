@@ -1,16 +1,9 @@
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
 
 # Create your models here.
-class User(AbstractUser):
-    # userId = models.AutoField(primary_key=True)
-    # firstName = models.CharField(max_length=50)
-    # lastName = models.CharField(max_length=50)
-    # email = models.EmailField(max_length=254)
-    # contactNum = models.IntegerField()
-    isAdmin = models.BooleanField(default=False)
-
 
 class Address(models.Model):
     addressId = models.AutoField(primary_key=True)
@@ -18,7 +11,6 @@ class Address(models.Model):
     line2 = models.CharField(max_length=100)
     line3 = models.CharField(max_length=100)
     postcode = models.CharField(max_length=10)
-    userID = models.OneToOneField(User, on_delete=models.CASCADE, blank=True)
 
 
 class Payment(models.Model):
@@ -28,7 +20,19 @@ class Payment(models.Model):
     expireMonth = models.IntegerField()
     expireYear = models.IntegerField()
     cvv = models.IntegerField()
-    userID = models.OneToOneField(User, on_delete=models.CASCADE, blank=True)
+
+
+class User(AbstractUser):
+    # userId = models.AutoField(primary_key=True)
+    first_name = models.CharField(max_length=50)
+    last_name = models.CharField(max_length=50)
+    email = models.EmailField(max_length=254)
+    contactNum = models.IntegerField()
+    isAdmin = models.BooleanField(default=False)
+    # addressID = models.OneToOneField(Address, on_delete=models.CASCADE, blank=True, default=None, null=True)
+    # paymentID = models.OneToOneField(Payment, on_delete=models.CASCADE, blank=True, default=None, null=True)
+
+    REQUIRED_FIELDS = ["first_name", "last_name", "email", "contactNum"]
 
 
 class ProductCategory(models.Model):
@@ -49,11 +53,11 @@ class Product(models.Model):
 
 class Order(models.Model):
     orderID = models.AutoField(primary_key=True)
-    userID = models.OneToOneField(User, on_delete=models.CASCADE)
+    userID = models.ForeignKey(User, on_delete=models.CASCADE)
     total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     date = models.DateTimeField(auto_now_add=True, blank=True)
-    addressID = models.OneToOneField(Address, on_delete=models.CASCADE)
-    paymentID = models.OneToOneField(Payment, on_delete=models.CASCADE)
+    addressID = models.ForeignKey(Address, on_delete=models.CASCADE)
+    paymentID = models.ForeignKey(Payment, on_delete=models.CASCADE)
 
 
 class OrderItem(models.Model):
