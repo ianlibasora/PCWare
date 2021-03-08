@@ -19,9 +19,8 @@ urlpatterns = [
 
     # Shop urls
     path("add-cart/<int:productID>", views.addCart, name="Add to cart"),
-
-    # Payment/Address
     path("view-basket/", views.showBasket, name="Basket"),
     path("checkout/", views.getCheckout, name="Checkout page"),
-    # path("order-complete/", views.completeOrder, name="Order completion")
+    path("view-orders/", views.viewOrders, name="Admin order overview"),
+    path("view-orders/order-info/<int:orderID>", views.orderMoreInfo, name="Admin order more info")
 ]

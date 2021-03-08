@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Order Info
+{% endblock %}
+{% block content %}
+    <h2>Order Info</h2>
+
+    <p>
+        {{ order.userID.first_name }} {{ order.userID.last_name }}<br/>
+        {{ order.addressID.line1 }}<br/>
+        {{ order.addressID.line2 }}<br/>
+        {{ order.addressID.line3 }}<br/>
+        {{ order.addressID.postcode }}
+    </p>
+    <h2>
+        Contact details:
+    </h2>
+    <p>
+        Contact number: {{ order.userID.contactNum }}<br/>
+        Email: {{ order.userID.email }}
+    </p>
+
+    {% for p in orderItems %}
+        <div>
+            Name: {{ p.productID.productName }}<br/>
+            Quantity: {{ p.quantity }}<br/>
+            Description: {{ p.productID.productDetails }}<br/>
+            Price: {{ p.productID.price }}
+        </div>
+    {% endfor %}
+
+    <p>
+        Order total: {{ order.total }}
+    </p>
+
+    <a href="/view-orders">Back to orders</a>
+{% endblock %}

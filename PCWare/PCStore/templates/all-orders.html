@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}
+    Admin Order Overview
+{% endblock %}
+{% block content %}
+    <h2>Admin Order Overview</h2>
+
+    <table>
+        <tr>
+            <th>Order ID</th>
+            <th>Order Date</th>
+            <th>User ID</th>
+            <th>Order Total</th>
+            <th>&nbsp;</th>
+        </tr>
+        {% for order in orders %}
+            <tr>
+                <td>{{ order.orderID }}</td>
+                <td>{{ order.date }}</td>
+                <td>{{ order.userID }}</td>
+                <td>{{ order.total }}</td>
+                <td><a href="order-info/{{ order.orderID }}">More info</a></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <a href="/">Back to home</a>
+{% endblock %}
