@@ -127,22 +127,19 @@ def getCheckout(request):
             pay = payment_form.save()
 
             Order(userID=request.user, addressID=addr, paymentID=pay).save()
-            order = Order.objects.filter(userID=request.user).first()
+            order = Order.objects.filter(userID=request.user).last()
             cart = Cart.objects.filter(userID=request.user).first()
             cartItems = CartItem.objects.filter(cartID=cart)
-            total = 0
 
             # Copy cartItem objects into orderItem objects
             for item in cartItems:
                 OrderItem(orderID=order, productID=item.productID, quantity=item.quantity).save()
-                total += (item.productID.price * item.quantity)
-            order.total = total
+                order.total += (item.productID.price * item.quantity)
             order.save()
 
             # Delete user's `cart`
             # Note: `cart` deletion cascades to `cartItem`
             cart.delete()
-            order = Order.objects.filter(userID=request.user).first()
             orderItems = OrderItem.objects.filter(orderID=order)
             return render(request, 'order-complete.html', {'order': order, "orderItems": orderItems})
     else:
