@@ -1,0 +1,53 @@
+
+.nav-style {
+    font-size: 140%;
+    background-color: #333333;
+}
+
+.nav-brand-style {
+    font-size: 150%;
+}
+
+.nav-item-style {
+    font-size: 105%;
+    border-radius: 5px;
+    color: white;
+}
+
+.nav-item-style:hover {
+    background-color: #1a1a1a;
+    color: black;
+    transition: 0.5s;
+}
+
+.drop-menu-style {
+    background-color: #999999;
+    padding: 5px;
+}
+
+.drop-item-style:hover {
+    background-color: #cccccc;
+}
+
+.login-link {
+    text-decoration: none;
+    color: white;
+    padding: 5px;
+    margin: 2px;
+    border-radius: 10px;
+}
+
+.login-link:hover {
+    background-color: #1a1a1a;
+    color: white;
+    transition: 0.5s;
+}
+
+.nav-toggler-style {
+    background-color: #cccccc;
+}
+
+.content-section {
+    font-size: 90%;
+    font-family: 'Noto Sans', sans-serif;
+}
