@@ -1,16 +1,33 @@
 {% extends "base.html" %}
 
+
 {% block title %}
     Checkout
 {% endblock %}
 
+{% load crispy_forms_tags %}
 {% block content %}
-{#    enctype="multipart/form-data"  #}
-    <form action="/checkout/" method="post">
+    <form action="/checkout/" method="post" role="form">
     {% csrf_token %}
-    {{ payment_form.as_p }}
-    {{ address_form.as_p }}
-    <input type="submit" value="Submit">
+        <div class="container">
+                <div class="col-6">
+                    <p style="font-size:30px">Payment Information</p>
+                    {{ payment_form.holderName | as_crispy_field }}
+                    {{ payment_form.cardNum | as_crispy_field }}
+                    {{ payment_form.expireMonth | as_crispy_field }} {{ payment_form.expireYear | as_crispy_field }}
+                    {{ payment_form.cvv | as_crispy_field }}
+                </div>
+            </br></br>
+                <div class="col-6">
+                    <p style="font-size:30px">Address Information</p>
+                    {{ address_form.line1 | as_crispy_field }}
+                    {{ address_form.line2 | as_crispy_field }}
+                    {{ address_form.line3 | as_crispy_field }}
+                    {{ address_form.postcode | as_crispy_field}}
+                </div>
+                </br>
+                <input type="submit" value="Submit">
+                <a href="/all-products">Back to shoppping</a>
+        </div>
     </form>
-    <a href="/all-products">Back to shoppping</a>
 {% endblock %}

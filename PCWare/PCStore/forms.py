@@ -46,6 +46,13 @@ class UserLoginForm(AuthenticationForm):
 class AddressForm(ModelForm):
     class Meta:
         model = Address
+        widget = {
+            'line1': forms.TextInput(attrs={'class': 'form-control'}),
+            'line2': forms.TextInput(attrs={'class': 'form-control'}),
+            'line3': forms.TextInput(attrs={'class': 'form-control'}),
+            'postcode': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
         fields = ["line1", "line2", "line3", "postcode"]
 
 
@@ -53,3 +60,5 @@ class PaymentForm(ModelForm):
     class Meta:
         model = Payment
         fields = ["holderName", "cardNum", "expireMonth", "expireYear", "cvv"]
+
+    field_order = ["holderName", "cardNum", "expireMonth", "expireYear", "cvv"]
