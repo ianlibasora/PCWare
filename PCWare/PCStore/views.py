@@ -156,9 +156,16 @@ def viewOrders(request):
     allOrders = Order.objects.all()
     return render(request, "all-orders.html", {"orders": allOrders})
 
+
 @login_required
 @admin_required
 def orderMoreInfo(request, orderID):
     order = get_object_or_404(Order, pk=orderID)
     orderItems = OrderItem.objects.filter(orderID=order)
     return render(request, "order-info.html", {"order": order, "orderItems": orderItems})
+
+
+@login_required
+@admin_required
+def adminHomeView(request):
+    return render(request, "admin-home.html")
