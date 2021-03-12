@@ -4,26 +4,30 @@
     Admin Order Overview
 {% endblock %}
 {% block content %}
+    <br>
     <h2>Admin Order Overview</h2>
 
-    <table>
-        <tr>
-            <th>Order ID</th>
-            <th>Order Date</th>
-            <th>User ID</th>
-            <th>Order Total</th>
-            <th>&nbsp;</th>
-        </tr>
-        {% for order in orders %}
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <td>{{ order.orderID }}</td>
-                <td>{{ order.date }}</td>
-                <td>{{ order.userID }}</td>
-                <td>{{ order.total }}</td>
-                <td><a href="order-info/{{ order.orderID }}">More info</a></td>
+                <th class="col">Order ID</th>
+                <th class="col">Order Date</th>
+                <th class="col">Username</th>
+                <th class="col">Order Total (€)</th>
+                <th class="col">&nbsp;</th>
             </tr>
-        {% endfor %}
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td>{{ order.orderID }}</td>
+                    <td>{{ order.date }}</td>
+                    <td>{{ order.userID }}</td>
+                    <td>{{ order.total }}</td>
+                    <td><a href="order-info/{{ order.orderID }}">More info</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
     </table>
 
-    <a href="/">Back to home</a>
 {% endblock %}

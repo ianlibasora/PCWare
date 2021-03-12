@@ -3,36 +3,75 @@
 {% block title %}
     Order Info
 {% endblock %}
+
 {% block content %}
-    <h2>Order Info</h2>
+    <br>
+    <h2>Order Details</h2>
 
-    <p>
-        {{ order.userID.first_name }} {{ order.userID.last_name }}<br/>
-        {{ order.addressID.line1 }}<br/>
-        {{ order.addressID.line2 }}<br/>
-        {{ order.addressID.line3 }}<br/>
-        {{ order.addressID.postcode }}
-    </p>
-    <h2>
-        Contact details:
-    </h2>
-    <p>
-        Contact number: {{ order.userID.contactNum }}<br/>
-        Email: {{ order.userID.email }}
-    </p>
+    <br><br>
+    <h4>User Details</h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col">Name</th>
+                <th class="col">{{ order.userID.first_name }} {{ order.userID.last_name }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Contact number</td>
+                <td>{{ order.userID.contactNum }}</td>
+            </tr>
+            <tr>
+                <td>Email</td>
+                <td>{{ order.userID.email }}</td>
+            </tr>
+            <tr>
+                <td>Shipping Address</td>
+                <td>{{ order.addressID.line1 }}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>{{ order.addressID.line2 }}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>{{ order.addressID.line3 }}</td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td>{{ order.addressID.postcode }}</td>
+            </tr>
 
-    {% for p in orderItems %}
-        <div>
-            Name: {{ p.productID.productName }}<br/>
-            Quantity: {{ p.quantity }}<br/>
-            Description: {{ p.productID.productDetails }}<br/>
-            Price: {{ p.productID.price }}
-        </div>
-    {% endfor %}
+        </tbody>
+    </table>
 
-    <p>
-        Order total: {{ order.total }}
-    </p>
+    <br>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="col">Quantity</th>
+                <th class="col">Product</th>
+                <th class="col">Unit Price (€)</th>
+                <th class="col">Total (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for p in orderItems %}
+                <tr>
+                    <td>{{ p.quantity }}</td>
+                    <td><a href="/single-product/{{ p.productID.productID }}">{{ p.productID.productName }}</a></td>
+                    <td>{{ p.productID.price }}</td>
+                    <td>&nbsp;</td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+                <td>{{ order.total }}</td>
+            </tr>
+        </tbody>
+    </table>
 
     <a href="/view-orders">Back to orders</a>
 {% endblock %}
