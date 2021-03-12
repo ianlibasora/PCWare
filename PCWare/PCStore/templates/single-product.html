@@ -3,14 +3,27 @@
 {% block title %}
     Products
 {% endblock %}
+
 {% block content %}
-    <p>
-        Product name: {{ product.productName }}<br/>
-        Description: {{ product.productDetails }}<br/>
-        Price: {{ product.price }} {{ product.picture.url }}<br/>
-        Category: {{ product.category.categoryName }}<br/>
-        <img src="{{ product.picture.url }}">
-    <p/>
-    <a href="/add-cart/{{ product.productID }}">Buy for {{ product.price }}</a>
-    <a href="/all-products">Back to shopping</a>
+    <br>
+
+    <div class="card mb-3" style="background-color: #d9d9d9">
+        <div class="row g-0">
+            <div class="col-md-5">
+                <img  class="img-thumbnail" src="{{ product.picture.url }}" alt="Product image">
+            </div>
+            <div class="col-md-7">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.productName }}</h5>
+                    <p class="card-text">{{ product.category.categoryName }}</p>
+                    <br>
+                    <p class="card-text">{{ product.productDetails }}</p>
+                    <h4 class="card-text">€{{ product.price }}</h4>
+
+                    <a href="/add-cart/{{ product.productID }}" class="btn btn-primary">Add to cart</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

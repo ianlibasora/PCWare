@@ -12,7 +12,8 @@
                 <div class="card h-100 m-2">
                     <a href="/single-product/{{ p.productID }}"><img src="{{ p.picture.url }}" class="card-img-top p-2 img-thumbnail" alt="Product Image" width="400" height="400"></a>
                     <div class="card-body p-1">
-                        <p class="card-text">{{ p.productName }}<br>€{{ p.price }}</p>
+                        <h5 class="card-title">{{ p.productName }}</h5>
+                        <p class="card-text">€{{ p.price }}</p>
                     </div>
                 </div>
             </div>
