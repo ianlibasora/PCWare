@@ -1,6 +1,9 @@
+from django.contrib.sites import requests
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views.generic import CreateView
+from rest_framework import viewsets
+from .serializers import *
 from .models import *
 from .forms import *
 from django.http import HttpResponse, HttpResponseRedirect
@@ -8,9 +11,12 @@ from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .permissions import *
 from django.contrib.auth.views import LoginView
+from django.core import serializers
+from django.http import HttpResponse
 
 
 # Create your views here.
+
 
 def index(request):
     return render(request, "index.html")
@@ -18,6 +24,10 @@ def index(request):
 
 def allProducts(request):
     all_p = Product.objects.all()
+    format = requests.GET.get("format", "")
+    if format == "json":
+        serialProducts = serializers.serialize("json", all_p)
+        return HttpResponse(serialProducts, content_type="application/json")
     return render(request, 'all-products.html', {'products': all_p, "Message": False})
 
 
@@ -169,3 +179,13 @@ def orderMoreInfo(request, orderID):
 @admin_required
 def adminHomeView(request):
     return render(request, "admin-home.html")
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
+class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
