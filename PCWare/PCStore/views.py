@@ -24,7 +24,7 @@ def index(request):
 
 def allProducts(request):
     all_p = Product.objects.all()
-    format = requests.GET.get("format", "")
+    format = request.GET.get("format", "")
     if format == "json":
         serialProducts = serializers.serialize("json", all_p)
         return HttpResponse(serialProducts, content_type="application/json")
