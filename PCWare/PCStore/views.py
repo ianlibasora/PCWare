@@ -28,7 +28,7 @@ def allProducts(request):
     if format == "json":
         serialProducts = serializers.serialize("json", all_p)
         return HttpResponse(serialProducts, content_type="application/json")
-    return render(request, 'all-products.html', {'products': all_p, "Message": False})
+    return render(request, 'all-products.html', {'products': all_p})
 
 
 def singleProduct(request, prodId):
@@ -101,7 +101,7 @@ def addCart(request, productID):
 
     item = get_object_or_404(Product, pk=productID)
     if item is None:
-        return render(request, 'all-products.html', {'products': all_p, "Message": "Warning. Invalid operation"})
+        return render(request, 'all-products.html', {'products': all_p})
 
     cartItem = CartItem.objects.filter(cartID=cart, productID=item.productID).first()
     if cartItem is None:
@@ -111,7 +111,7 @@ def addCart(request, productID):
         cartItem.quantity += 1
         cartItem.save()
 
-    return render(request, 'all-products.html', {'products': all_p, "Message": f"Added {item.productName} to caer"})
+    return render(request, 'all-products.html', {'products': all_p})
 
 
 @login_required

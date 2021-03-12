@@ -3,21 +3,20 @@
 {% block title %}
     Products
 {% endblock %}
+
 {% block content %}
-    {% if Message is not False %}
-        <p>{{ Message }}</p>
-    {% endif %}
+    <br>
+    <div class="row row-cols-auto p-1 gy-3">
+        {% for p in products %}
+            <div class="col-sm-3">
+                <div class="card h-100 m-2">
+                    <a href="/single-product/{{ p.productID }}"><img src="{{ p.picture.url }}" class="card-img-top p-2 img-thumbnail" alt="Product Image" width="400" height="400"></a>
+                    <div class="card-body p-1">
+                        <p class="card-text">{{ p.productName }}<br>€{{ p.price }}</p>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 
-    <a href="/view-basket">View basket</a>
-
-    {% for p in products %}
-        <div>
-            <p>
-                Name {{ p.productName }}<br/>
-                Description: {{ p.productDetails }}<br/>
-                Price: {{ p.price }}<br/>
-                <a href="/single-product/{{ p.productID }}">more info</a>
-            </p>
-        </div>
-    {% endfor %}
 {% endblock %}
