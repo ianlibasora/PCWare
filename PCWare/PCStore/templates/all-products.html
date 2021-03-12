@@ -7,7 +7,7 @@
 {% block content %}
     <br>
     {% if Message is not None %}
-        <p class="alert alert-success" role="alert">{{ Message }}</p>
+        <p class="alert alert-success text-center" role="alert">{{ Message }}</p>
     {% endif %}
 
     <br>
@@ -15,7 +15,7 @@
         {% for p in products %}
             <div class="col-sm-3">
                 <div class="card h-100 m-2">
-                    <a href="/single-product/{{ p.productID }}"><img src="{{ p.picture.url }}" class="card-img-top p-2 img-thumbnail" alt="Product Image" width="400" height="400"></a>
+                    <a href="/single-product/{{ p.productID }}"><img src="{{ p.picture.url }}" class="card-img-top p-2 card-img-style" alt="Product Image" width="400" height="400"></a>
                     <div class="card-body p-1">
                         <h5 class="card-title">{{ p.productName }}</h5>
                         <p class="card-text">€{{ p.price }}</p>

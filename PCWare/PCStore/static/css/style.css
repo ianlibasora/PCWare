@@ -52,8 +52,17 @@
     font-family: 'Noto Sans', sans-serif;
 }
 
+.card-img-style {
+    height: 175pt;
+    width: 100%;
+}
 
-.temp {
-    text-decoration: none;
-    color: red;
+.basket-card-img-style {
+    height: 250pt;
+    width: 100%;
+}
+
+.s-product-card-img-style {
+    height: 100%;
+    width: 100%;
 }
