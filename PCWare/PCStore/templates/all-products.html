@@ -6,6 +6,11 @@
 
 {% block content %}
     <br>
+    {% if Message is not None %}
+        <p class="alert alert-success" role="alert">{{ Message }}</p>
+    {% endif %}
+
+    <br>
     <div class="row row-cols-auto p-1 gy-3">
         {% for p in products %}
             <div class="col-sm-3">

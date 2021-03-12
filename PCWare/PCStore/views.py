@@ -28,7 +28,7 @@ def allProducts(request):
     if format == "json":
         serialProducts = serializers.serialize("json", all_p)
         return HttpResponse(serialProducts, content_type="application/json")
-    return render(request, 'all-products.html', {'products': all_p})
+    return render(request, 'all-products.html', {'products': all_p, "Message": None})
 
 
 def singleProduct(request, prodId):
@@ -59,7 +59,6 @@ def productForm(request):
         if form.is_valid():
             new_product = form.save()
             return render(request, 'single-product.html', {'product': new_product})
-
     else:
         form = ProductForm()
         return render(request, 'product-form.html', {'form': form})
@@ -100,9 +99,6 @@ def addCart(request, productID):
         cart = Cart.objects.filter(userID=user).first()
 
     item = get_object_or_404(Product, pk=productID)
-    if item is None:
-        return render(request, 'all-products.html', {'products': all_p})
-
     cartItem = CartItem.objects.filter(cartID=cart, productID=item.productID).first()
     if cartItem is None:
         CartItem(cartID=cart, productID=item).save()
@@ -111,7 +107,7 @@ def addCart(request, productID):
         cartItem.quantity += 1
         cartItem.save()
 
-    return render(request, 'all-products.html', {'products': all_p})
+    return render(request, 'all-products.html', {'products': all_p, "Message": f"Added {item.productName} to cart."})
 
 
 @login_required

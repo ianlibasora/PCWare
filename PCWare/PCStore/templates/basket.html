@@ -3,20 +3,51 @@
 {% block title %}
     Shopping Basket
 {% endblock %}
+
 {% block content %}
 
+    <br>
     {% if Content %}
         {% for p in cart %}
-            <div>
-                Name: {{ p.productID.productName }}<br/>
-                Quantity: {{ p.quantity }}<br/>
-                Description: {{ p.productID.productDetails }}<br/>
-                Price: {{ p.productID.price }}
+        <div class="card mb-3" style="background-color: #d9d9d9">
+            <div class="row g-0 p-4 justify-content-md-center">
+                <div class="col-md-4">
+                    <img  class="img-thumbnail p-5" src="{{ p.productID.picture.url }}" alt="Product image">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ p.productID.productName }}</h5>
+                        <p class="card-subtitle">{{ p.productID.category.categoryName }}</p>
+                        <br>
+                        <h4 class="card-text">€{{ p.productID.price }}</h4>
+                        <p class="card-text">Quantity: {{ p.quantity }}</p>
+
+                        <a href="/add-cart/{{ p.productID.productID }}" class="btn btn-primary">Add more to cart</a>
+                    </div>
+                </div>
             </div>
+        </div>
         {% endfor %}
-        <a href="/checkout/">Proceed to checkout</a>
+
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <a href="/checkout" class="btn btn-primary">Proceed to checkout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% else %}
-        <p>Cart is empty</p>
+        <div class="row justify-content-md-center">
+            <div class="col col-lg-3">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <h3 class="card-title">Cart is empty</h3>
+                        <a href="/all-products" class="btn btn-primary">Back to shopping</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endif %}
-    <a href="/all-products">Back to shopping</a>
 {% endblock %}
