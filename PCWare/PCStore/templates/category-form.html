@@ -1,10 +1,19 @@
 {% extends "base.html" %}
 
 {% block title %}Product Category Form{% endblock %}
+
+{% load crispy_forms_tags %}
 {% block content %}
     <form action="/category-form/" method="post">
     {% csrf_token %}
-    {{  form.as_table }}
-    <input type="submit" value="Submit">
+    <div class="container">
+        <div class="col-6">
+            <p style="font-size:30px">Payment Information</p>
+            {{ form.categoryName | as_crispy_field }}
+            {{ form.categoryDetails | as_crispy_field }}
+        </div>
+        </br>
+        <input type="submit" value="Submit">
+    </div>
     </form>
 {% endblock %}
