@@ -64,14 +64,16 @@
                     <td>{{ p.quantity }}</td>
                     <td><a href="/single-product/{{ p.productID.productID }}">{{ p.productID.productName }}</a></td>
                     <td>{{ p.productID.price }}</td>
-                    <td>&nbsp;</td>
+                    <td>{{ p.total }}</td>
                 </tr>
             {% endfor %}
+        </tbody>
+        <tfoot>
             <tr>
                 <td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
                 <td>{{ order.total }}</td>
             </tr>
-        </tbody>
+        </tfoot>
     </table>
 
     <a href="/">Return to Home</a>

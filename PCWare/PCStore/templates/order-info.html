@@ -62,7 +62,7 @@
                     <td>{{ p.quantity }}</td>
                     <td><a href="/single-product/{{ p.productID.productID }}">{{ p.productID.productName }}</a></td>
                     <td>{{ p.productID.price }}</td>
-                    <td>&nbsp;</td>
+                    <td>{{ p.total }}</td>
                 </tr>
             {% endfor %}
         </tbody>

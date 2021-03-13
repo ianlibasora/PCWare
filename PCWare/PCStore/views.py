@@ -101,11 +101,15 @@ def addCart(request, productID):
     item = get_object_or_404(Product, pk=productID)
     cartItem = CartItem.objects.filter(cartID=cart, productID=item.productID).first()
     if cartItem is None:
-        CartItem(cartID=cart, productID=item).save()
-        cartItem = CartItem.objects.filter(cartID=cart, productID=item).first()
+        CartItem(cartID=cart, productID=item, total=item.price).save()
+        cart.total += item.price
+        cart.save()
     else:
         cartItem.quantity += 1
+        cartItem.total += item.price
+        cart.total += item.price
         cartItem.save()
+        cart.save()
 
     return render(request, 'all-products.html', {'products': all_p, "Message": f"Added {item.productName} to cart."})
 
@@ -119,7 +123,7 @@ def showBasket(request):
         return render(request, 'basket.html', {'Content': False})
 
     cartItem = CartItem.objects.filter(cartID=cart.cartID)
-    return render(request, 'basket.html', {'cart': cartItem, "Content": True})
+    return render(request, 'basket.html', {"cart": cart, 'cartItem': cartItem, "Content": True})
 
 
 @login_required
@@ -132,16 +136,14 @@ def getCheckout(request):
             addr = address_form.save()
             pay = payment_form.save()
 
-            Order(userID=request.user, addressID=addr, paymentID=pay).save()
-            order = Order.objects.filter(userID=request.user).last()
             cart = Cart.objects.filter(userID=request.user).first()
             cartItems = CartItem.objects.filter(cartID=cart)
+            Order(userID=request.user, addressID=addr, paymentID=pay, total=cart.total).save()
+            order = Order.objects.filter(userID=request.user).last()
 
             # Copy cartItem objects into orderItem objects
             for item in cartItems:
-                OrderItem(orderID=order, productID=item.productID, quantity=item.quantity).save()
-                order.total += (item.productID.price * item.quantity)
-            order.save()
+                OrderItem(orderID=order, productID=item.productID, quantity=item.quantity, total=item.total).save()
 
             # Delete user's `cart`
             # Note: `cart` deletion cascades to `cartItem`

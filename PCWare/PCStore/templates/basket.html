@@ -8,7 +8,7 @@
 
     <br>
     {% if Content %}
-        {% for p in cart %}
+        {% for p in cartItem %}
         <div class="card mb-3" style="background-color: #d9d9d9">
             <div class="row g-0 p-4 justify-content-md-center">
                 <div class="col-md-4">
@@ -33,6 +33,7 @@
             <div class="col col-lg-3">
                 <div class="card text-center">
                     <div class="card-body">
+                        <h4 class="card-title">Subtotal (€) {{ cart.total }}</h4>
                         <a href="/checkout" class="btn btn-primary">Proceed to checkout</a>
                     </div>
                 </div>

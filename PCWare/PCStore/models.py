@@ -65,11 +65,13 @@ class OrderItem(models.Model):
     orderID = models.ForeignKey(Order, on_delete=models.CASCADE)
     productID = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField()
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
 
 class Cart(models.Model):
     cartID = models.AutoField(primary_key=True)
     userID = models.OneToOneField(User, on_delete=models.CASCADE)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
 
 class CartItem(models.Model):
@@ -77,3 +79,4 @@ class CartItem(models.Model):
     cartID = models.ForeignKey(Cart, on_delete=models.CASCADE)
     productID = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=1)
+    total = models.DecimalField(max_digits=10, decimal_places=2, default=0)
