@@ -1,10 +1,18 @@
 {% extends "base.html" %}
 
 {% block title %}Product Category Form{% endblock %}
+
+{% load crispy_forms_tags %}
 {% block content %}
     <form action="/product-form/" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    {{  form.as_table }}
+    </br>
+        <div class="container">
+            {% for field in form %}
+                {{ field | as_crispy_field }}
+                </br>
+            {% endfor %}
     <input type="submit" value="Submit">
+        </div>>
     </form>
 {% endblock %}
