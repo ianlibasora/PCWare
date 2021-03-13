@@ -4,10 +4,16 @@
     Login Page
 {% endblock %}
 
+{% load crispy_forms_tags %}
 {% block content %}
         <form action="." method="POST">
            {% csrf_token %}
-           {{  form.as_table }}
-           <button type="submit">Submit</button>
+        <div class="col-lg-6">
+           {% for field in form %}
+               {{ field | as_crispy_field }}
+            {% endfor %}
+        </br>
+           <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
         </form>
 {% endblock %}

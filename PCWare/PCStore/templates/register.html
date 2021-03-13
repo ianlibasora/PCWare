@@ -4,11 +4,17 @@
     Registration page
 {% endblock %}
 
+{% load crispy_forms_tags %}
 {% block content %}
-        <h3>Register a new user. </h3>
+    </br>
+    <div class="col-6">
+        <h3>Register a new user</h3>
         <form action="." method="POST">
            {% csrf_token %}
-           {{  form.as_table }}
-           <button type="submit">Submit</button>
+            {% for field in form %}
+                {{  field | as_crispy_field }}
+            {% endfor %}
+           <button type="submit" class="btn btn-primary">Register</button>
         </form>
+    </div>
 {% endblock %}
