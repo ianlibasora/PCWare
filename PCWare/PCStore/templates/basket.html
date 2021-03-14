@@ -22,7 +22,8 @@
                         <h4 class="card-text">€{{ p.productID.price }}</h4>
                         <p class="card-text">Quantity: {{ p.quantity }}</p>
 
-                        <a href="/add-cart/{{ p.productID.productID }}" class="btn btn-primary">Add more to cart</a>
+                        <a href="/add-cart/{{ p.productID.productID }}" class="card-link btn btn-primary">+</a>
+                        <a href="/remove-cart/{{ p.productID.productID }}" class="card-link btn btn-danger">-</a>
                     </div>
                 </div>
             </div>

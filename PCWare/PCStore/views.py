@@ -115,6 +115,31 @@ def addCart(request, productID):
 
 
 @login_required
+def removeCart(request, productID):
+    user = request.user
+    cart = get_object_or_404(Cart, userID=user)
+    product = get_object_or_404(Product, pk=productID)
+    cartItem = get_object_or_404(CartItem, cartID=cart, productID=productID)
+
+    cartItem.quantity -= 1
+    cartItem.total -= cartItem.productID.price
+    cart.total -= cartItem.productID.price
+
+    if cartItem.quantity == 0:
+        cartItem.delete()
+    else:
+        cartItem.save()
+
+    if len(CartItem.objects.filter(cartID=cart)) == 0:
+        cart.delete()
+    else:
+        cart.save()
+
+    allP = Product.objects.all()
+    return render(request, "all-products.html", {"products": allP, "Message": f"Removed {product.productName} from cart."})
+
+
+@login_required
 def showBasket(request):
     user = request.user
     cart = Cart.objects.filter(userID=user).first()
@@ -123,6 +148,9 @@ def showBasket(request):
         return render(request, 'basket.html', {'Content': False})
 
     cartItem = CartItem.objects.filter(cartID=cart.cartID)
+    if cartItem is None:
+        return render(request, 'basket.html', {'Content': False})
+
     return render(request, 'basket.html', {"cart": cart, 'cartItem': cartItem, "Content": True})
 
 

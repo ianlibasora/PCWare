@@ -27,6 +27,7 @@ urlpatterns = [
 
     # Shop urls
     path("add-cart/<int:productID>", views.addCart, name="Add to cart"),#done
+    path("remove-cart/<int:productID>", views.removeCart, name="Remove from cart"),  # done
     path("view-basket/", views.showBasket, name="Basket"),#done
     path("checkout/", views.getCheckout, name="Checkout page"),#done
 
