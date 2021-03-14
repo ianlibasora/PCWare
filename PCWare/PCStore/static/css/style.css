@@ -66,3 +66,16 @@
     height: 100%;
     width: 100%;
 }
+
+footer {
+   border: 5px solid grey;
+   font-size: 85%;
+   text-align: center;
+   background-color: #cccccc;
+   color: black;
+}
+
+.foot-content {
+   margin: 0px 65px 0px 65px;
+   padding: 8px;
+}
