@@ -50,6 +50,12 @@
 .content-section {
     font-size: 90%;
     font-family: 'Noto Sans', sans-serif;
+    background-color: #e6e6e6;
+}
+
+.slide-image-style {
+    height: 350pt;
+    width: 100%;
 }
 
 .card-img-style {

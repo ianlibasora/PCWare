@@ -9,25 +9,25 @@
     <br>
     {% if Content %}
         {% for p in cartItem %}
-        <div class="card mb-3" style="background-color: #d9d9d9">
-            <div class="row g-0 p-4 justify-content-md-center">
-                <div class="col-md-4">
-                    <img  class="basket-card-img-style p-3" src="{{ p.productID.picture.url }}" alt="Product image" width="200" height="200">
-                </div>
-                <div class="col-md-7">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ p.productID.productName }}</h5>
-                        <p class="card-subtitle">{{ p.productID.category.categoryName }}</p>
-                        <br>
-                        <h4 class="card-text">€{{ p.productID.price }}</h4>
-                        <p class="card-text">Quantity: {{ p.quantity }}</p>
+            <div class="card mb-3" style="background-color: #bfbfbf">
+                <div class="row g-0 p-4 justify-content-md-center">
+                    <div class="col-md-4">
+                        <img  class="basket-card-img-style p-3" src="{{ p.productID.picture.url }}" alt="Product image" width="200" height="200">
+                    </div>
+                    <div class="col-md-7">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ p.productID.productName }}</h5>
+                            <p class="card-subtitle">{{ p.productID.category.categoryName }}</p>
+                            <br>
+                            <h4 class="card-text">€{{ p.productID.price }}</h4>
+                            <p class="card-text">Quantity: {{ p.quantity }}</p>
 
-                        <a href="/basket/add-cart/{{ p.productID.productID }}" class="card-link btn btn-primary">+</a>
-                        <a href="/basket/remove-cart/{{ p.productID.productID }}" class="card-link btn btn-danger">-</a>
+                            <a href="/basket/add-cart/{{ p.productID.productID }}" class="card-link btn btn-primary">+</a>
+                            <a href="/basket/remove-cart/{{ p.productID.productID }}" class="card-link btn btn-danger">-</a>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
         {% endfor %}
 
         <div class="row justify-content-md-center">

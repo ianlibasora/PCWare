@@ -63,17 +63,20 @@
         </div>
     </nav>
 
-    <section class="container content-section">
-        {% block content %}
+    <div class="content-section">
+        <section class="container">
+            {% block content %}
 
-        {% endblock %}
-    </section>
+            {% endblock %}
+        </section>
 
-    <br><br>
-    <footer class="footer bg-secondary p-2">
-        <div class="container text-center">
-            <span class="text-white">Place sticky footer content here. <a href="mailto:admin@test.com" style="text-decoration: none">Contact us</a></span>
-        </div>
-    </footer>
+
+        <br><br>
+        <footer class="footer bg-secondary p-2">
+            <div class="container text-center">
+                <span class="text-white">Copyright of PCWare™. <a href="mailto:help@pcware.com" style="text-decoration: none">Contact us</a></span>
+            </div>
+        </footer>
+    </div>
 </body>
 </html>
