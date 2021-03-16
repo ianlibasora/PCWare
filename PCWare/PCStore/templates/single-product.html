@@ -18,6 +18,7 @@
                     <p class="card-subtitle">{{ product.category.categoryName }}</p>
                     <br>
                     <p class="card-text">{{ product.productDetails }}</p>
+                    <p class="card-text">Stock available: {{ product.stock }}</p>
                     <h4 class="card-text">€{{ product.price }}</h4>
 
                     <a href="/basket/add-cart/{{ product.productID }}" class="btn btn-primary">Add to cart</a>
