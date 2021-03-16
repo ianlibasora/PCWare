@@ -44,7 +44,7 @@ def productCategoryForm(request):
 
         if form.is_valid():
             new_product = form.save()
-            return redirect("/")
+            return redirect("/admin-home")
     else:
         form = ProductCategoryForm()
         return render(request, 'category-form.html', {'form': form})

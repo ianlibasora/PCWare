@@ -22,8 +22,8 @@
                         <h4 class="card-text">€{{ p.productID.price }}</h4>
                         <p class="card-text">Quantity: {{ p.quantity }}</p>
 
-                        <a href="/add-cart/{{ p.productID.productID }}" class="card-link btn btn-primary">+</a>
-                        <a href="/remove-cart/{{ p.productID.productID }}" class="card-link btn btn-danger">-</a>
+                        <a href="/basket/add-cart/{{ p.productID.productID }}" class="card-link btn btn-primary">+</a>
+                        <a href="/basket/remove-cart/{{ p.productID.productID }}" class="card-link btn btn-danger">-</a>
                     </div>
                 </div>
             </div>
@@ -35,7 +35,7 @@
                 <div class="card text-center">
                     <div class="card-body">
                         <h4 class="card-title">Subtotal (€) {{ cart.total }}</h4>
-                        <a href="/checkout" class="btn btn-primary">Proceed to checkout</a>
+                        <a href="checkout/" class="btn btn-primary">Proceed to checkout</a>
                     </div>
                 </div>
             </div>
