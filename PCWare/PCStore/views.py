@@ -103,13 +103,12 @@ def addCart(request, productID):
     if cartItem is None:
         CartItem(cartID=cart, productID=item, total=item.price).save()
         cart.total += item.price
-        cart.save()
     else:
         cartItem.quantity += 1
         cartItem.total += item.price
         cart.total += item.price
         cartItem.save()
-        cart.save()
+    cart.save()
 
     return render(request, 'all-products.html', {'products': all_p, "Message": f"Added {item.productName} to cart."})
 
@@ -125,16 +124,9 @@ def removeCart(request, productID):
     cartItem.total -= cartItem.productID.price
     cart.total -= cartItem.productID.price
 
-    if cartItem.quantity == 0:
-        cartItem.delete()
-    else:
-        cartItem.save()
-
-    if len(CartItem.objects.filter(cartID=cart)) == 0:
-        cart.delete()
-    else:
-        cart.save()
-
+    cartItem.delete() if cartItem.quantity == 0 else cartItem.save()
+    cart.delete() if len(CartItem.objects.filter(cartID=cart)) == 0 else cart.save()
+    
     allP = Product.objects.all()
     return render(request, "all-products.html", {"products": allP, "Message": f"Removed {product.productName} from cart."})
 
@@ -150,7 +142,6 @@ def showBasket(request):
     cartItem = CartItem.objects.filter(cartID=cart.cartID)
     if cartItem is None:
         return render(request, 'basket.html', {'Content': False})
-
     return render(request, 'basket.html', {"cart": cart, 'cartItem': cartItem, "Content": True})
 
 
@@ -169,21 +160,14 @@ def getCheckout(request):
             Order(userID=request.user, addressID=addr, paymentID=pay, total=cart.total).save()
             order = Order.objects.filter(userID=request.user).last()
 
-            # Copy cartItem objects into orderItem objects
             for item in cartItems:
                 OrderItem(orderID=order, productID=item.productID, quantity=item.quantity, total=item.total).save()
-
-            # Delete user's `cart`
-            # Note: `cart` deletion cascades to `cartItem`
             cart.delete()
+
             orderItems = OrderItem.objects.filter(orderID=order)
             return render(request, 'order-complete.html', {'order': order, "orderItems": orderItems})
     else:
-        content = {
-            'address_form': AddressForm(),
-            'payment_form': PaymentForm()
-        }
-    return render(request, 'checkout.html', content)
+        return render(request, 'checkout.html', {'address_form': AddressForm(), 'payment_form': PaymentForm()})
 
 
 @login_required
