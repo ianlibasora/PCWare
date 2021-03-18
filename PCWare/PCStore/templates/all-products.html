@@ -14,7 +14,7 @@
     <div class="row row-cols-auto p-1 gy-3">
         {% for p in products %}
             <div class="col-sm-3">
-                <div class="card h-100 m-2">
+                <div class="card h-100 m-2 fade-in">
                     <a href="/single-product/{{ p.productID }}"><img src="{{ p.picture.url }}" class="card-img-top p-2 card-img-style" alt="Product Image" width="400" height="400"></a>
                     <div class="card-body p-1">
                         <h5 class="card-title">{{ p.productName }}</h5>
