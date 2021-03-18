@@ -44,7 +44,7 @@ def productCategoryForm(request):
 
         if form.is_valid():
             new_product = form.save()
-            return redirect("/admin-home")
+            return redirect("/account")
     else:
         form = ProductCategoryForm()
         return render(request, 'category-form.html', {'form': form})
@@ -172,23 +172,35 @@ def getCheckout(request):
 
 @login_required
 @admin_required
-def viewOrders(request):
+def adminViewOrders(request):
     allOrders = Order.objects.all()
     return render(request, "all-orders.html", {"orders": allOrders})
 
 
 @login_required
 @admin_required
-def orderMoreInfo(request, orderID):
+def adminOrderMoreInfo(request, orderID):
     order = get_object_or_404(Order, pk=orderID)
     orderItems = OrderItem.objects.filter(orderID=order)
     return render(request, "order-info.html", {"order": order, "orderItems": orderItems})
 
 
 @login_required
-@admin_required
-def adminHomeView(request):
-    return render(request, "admin-home.html")
+def userHomeView(request):
+    return render(request, "account.html")
+
+
+@login_required
+def myOrders(request):
+    orders = Order.objects.filter(userID=request.user)
+    return render(request, "all-orders.html", {"orders": orders})
+
+
+@login_required
+def myOrderInfo(request, orderID):
+    order = get_object_or_404(Order, pk=orderID, userID=request.user)
+    orderItems = OrderItem.objects.filter(orderID=order)
+    return render(request, "order-info.html", {"order": order, "orderItems": orderItems})
 
 
 class UserViewSet(viewsets.ModelViewSet):
