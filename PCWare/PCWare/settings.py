@@ -38,12 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'crispy_forms',
     "PCStore",
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000", # node on port 3000
+    "http://127.0.0.1:3000" # node on port 3000
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -53,6 +59,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'PCWare.urls'
