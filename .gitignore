@@ -7,3 +7,4 @@ PCWare/PCStore/migrations/__pycache__/
 PCWare/__pycache__/
 #Media dir should be ignored, commit for now
 #PCWare/media/productImg/*.png
+PCStoreNode/
