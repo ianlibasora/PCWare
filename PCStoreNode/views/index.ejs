@@ -18,7 +18,17 @@
 
 		</table>
 
+    <form id="login-form" method=POST, action=".">
+        <label for="username">Username</label>
+        <input id="form-username" name="username" type="text" placeholder="Your Username">
+        <label for="password">Password</label>
+        <input type="password" name="password" id="form-password" placeholder="Your Password">
+        <input type="submit" value="login">
+    <form>
+
 	</body>
+
+
 
 	<script>
 		fetch("http://localhost:8000/api/products/?format=json").then(response => response.json()).then(data => {
@@ -39,8 +49,29 @@
 				let price = document.createElement("td")
 				price.innerHTML = product["price"]
 				newRow.appendChild(price)
-			})
-		})
+
+            })
+
+			let loginform = document.getElementById("login-form")
+				loginform.addEventListener("submit", (event)=> {
+			    event.preventDefault();
+
+			    let user = document.getElementById("form-username").value
+			    let pass = document.getElementById("form-password").value
+
+			    fetch("http://localhost:8000/token/", {
+			        method:"POST",
+			        headers:{
+			            'Accept': 'application/json',
+			            'Content-Type': 'application/json',
+			            // 'Authorization': `Token ${auth_token}`
+			        },
+
+			        body:JSON.stringify( {username:user, password:pass})
+			    }).then(response => response.json()).then(data => console.log(data))
+			}, true)
+		});
 
 	</script>
+
 </html>
