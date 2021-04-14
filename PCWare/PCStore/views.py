@@ -1,8 +1,15 @@
+import json
+
 from django.contrib.sites import requests
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views.generic import CreateView
 from rest_framework import viewsets
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+
 from .serializers import *
 from .models import *
 from .forms import *
@@ -88,10 +95,17 @@ def logout_view(request):
     return redirect('/')
 
 
-@login_required
+
+
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def addCart(request, productID):
     user = request.user
     all_p = Product.objects.all()
+    if user.is_anonymous:
+        tokenjson = json.loads(request.META.get("HTTP_AUTHORIZATION"))
+        token = tokenjson["token"]
+        user = Token.objects.get(key=token).user
 
     cart = Cart.objects.filter(userID=user).first()
     if cart is None:

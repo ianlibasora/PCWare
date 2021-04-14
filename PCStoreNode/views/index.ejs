@@ -47,6 +47,17 @@
 				let price = document.createElement("td")
 				price.innerHTML = product["price"]
 				newRow.appendChild(price)
+
+				let btnContainer = document.createElement("td")
+				let btn = document.createElement("button")
+				btn.innerHTML = "Add to cart"
+				btn.onclick = `addCart(${product["productID"]})`
+				btn.addEventListener("click", () => {
+					addCart(product["productID"])
+				});
+
+				btnContainer.appendChild(btn)
+				newRow.appendChild(btnContainer)
 			})
 		})
 
@@ -60,16 +71,40 @@
 				let pass = document.getElementById("form-password").value
 				fetch("http://localhost:8000/token/", {
 					method:"POST",
-					headers:
-						{
+					headers: {
 							'Accept': 'application/json',
 							'Content-Type': 'application/json',
 							// 'Authorization': `Token ${auth_token}`
 						},
 						body:JSON.stringify({username:user, password:pass})
-				}).then(response => response.json()).then(data => console.log(data))
+				}).then(response => response.json()).then(function(data) {
+					console.log(data)
+					window.token = data
+					console.log(window.token)
+				})
 			}, 
 			true
 		)
+
+		function addCart(productID) {
+			if (window.token) {
+				fetch(
+					`http://localhost:8000/basket/add-cart/${productID}`, 
+					{
+						method: "GET",
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': JSON.stringify(window.token)
+						}
+					}
+				).then(response => response.json()).then(data => console.log(data));
+			} else {
+				alert("Login Required");
+			}
+		}
+
+
+
 	</script>
 </html>
