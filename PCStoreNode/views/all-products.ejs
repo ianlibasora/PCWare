@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<%- include("./partials/header"); %>
+	</head>
+	<body>
+		<%- include("./partials/navbar"); %>
+		<div class="content-section">
+		
+			<br>
+			<%# if (Message != null) { %>
+				<!-- <p class="alert alert-info text-center" role="alert">{{ Message }}</p> -->
+			<%# } %>
+  
+			<br>
+			<section class="container">
+				<div id="products-container" class="row row-cols-auto p-1 gy-3">
+					<!-- Dynamic insertion -->
+				</div>
+			</section>
+			<br><br>
+		</div>
+		
+		<%- include("./partials/footer"); %>
+	</body>
+	<script>
+		fetch("http://localhost:8000/api/products/?format=json").then(response => response.json()).then(data => {
+			console.log(data)
+			let container = document.getElementById("products-container")
+			data.forEach(product => {
+				let cardPad = document.createElement("div")
+				cardPad.className = "col-sm-3"
+				
+				let card = document.createElement("div")
+				card.className = "card h-100 m-2 fade-in"
+				cardPad.appendChild(card)
+
+				let cardLink = document.createElement("a")
+				cardLink.href = `/single-product/${product["productID"]}`
+				let cardImg = document.createElement("img")
+				cardImg.src = product["picture"]
+				cardImg.className = "card-img-top p-2 card-img-style"
+				cardImg.alt = "Product Image"
+				cardImg.width = "400"
+				cardImg.height = "400"
+				cardLink.appendChild(cardImg)
+				card.appendChild(cardLink)
+
+				let cardBody = document.createElement("div")
+				cardBody.className = "card-body p-1"
+				let cardTitle = document.createElement("h5")
+				let cardText = document.createElement("p")
+				cardTitle.className = "card-title"
+				cardTitle.innerHTML = product["productName"]
+				cardText.className = "card-text"
+				cardText.innerHTML = product["price"]
+				cardBody.appendChild(cardTitle)
+				cardBody.appendChild(cardText)
+				card.appendChild(cardBody)
+
+				container.appendChild(cardPad)
+			})
+		})
+
+	</script>
+</html>
