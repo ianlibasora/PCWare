@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<%- include("./partials/header"); %>
+	</head>
+	<body>
+		<%- include("./partials/navbar"); %>
+
+		<div class="content-section">
+			<br>
+
+			<section class="container">
+				<br>
+
+				<div class="card mb-3" style="background-color: #d9d9d9">
+					<div class="row g-0">
+						<div id="img-container" class="col-md-5">
+							<!-- Dynamic insertion -->
+						</div>
+						<div class="col-md-7">
+							<div id="detail-container" class="card-body">
+								<!-- Dynamic insertion -->
+							</div>
+						</div>
+					</div>
+				</div>
+			</section>
+			<br><br>
+		</div>
+		
+		<%- include("./partials/footer"); %>
+	
+	</body>
+	<script>
+		fetch(`http://localhost:8000/single-product/<%= productID %>?format=json`)
+		.then(resp => {
+			if (!resp.ok) {
+				throw new Error("Fetch error");
+			}
+			return resp.json()		
+		})
+		.then(data => {
+			product = data[0]["fields"]
+			console.log(product)
+			let imgContainer = document.getElementById("img-container")
+			let img = document.createElement("img")
+			img.className = "img-thumbnail s-product-card-img-style"
+			img.src = `http://localhost:8000/media/${product["picture"]}`
+			img.alt = "Product image"
+			img.width = "200"
+			img.height = "200"
+			imgContainer.appendChild(img)
+
+			let dContainer = document.getElementById("detail-container")
+			let cardTitle = document.createElement("h5")
+			cardTitle.className = "card-title"
+			cardTitle.innerHTML = product["productName"]
+			dContainer.appendChild(cardTitle)
+
+			let spacer = document.createElement("br")
+			dContainer.appendChild(spacer)
+
+			let productDetails = document.createElement("p")
+			productDetails.className = "card-text"
+			productDetails.innerHTML = product["productDetails"]
+			dContainer.appendChild(productDetails)
+
+			let productStock = document.createElement("p")
+			productStock.className = "card-text"
+			productStock.innerHTML = `Stock available: ${product["stock"]}`
+			dContainer.appendChild(productStock)
+
+			let productPrice = document.createElement("h4")
+			productPrice.className = "card-text"
+			productPrice.innerHTML = `€${product["price"]}`
+			dContainer.appendChild(productPrice)
+
+			let addbtn = document.createElement("button")
+			addbtn.className = "btn btn-primary"
+			addbtn.innerHTML = "Add to cart"
+			addbtn.onclick = `addCard(<%= productID %>)`
+			addbtn.addEventListener("click", () => {
+				addCart(product["productID"])
+			})
+
+			dContainer.appendChild(addbtn)
+		})
+		.catch(err => alert("Error. Invalid productID"))
+
+		function addCart(productID) {
+			if (sessionStorage.getItem("Token") != null) {
+				fetch(
+					`http://localhost:8000/basket/add-cart/<%= productID %>`, 
+					{
+						method: "GET",
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': sessionStorage.getItem("Token")
+						}
+					}
+				).then(response => response.json()).then(data => console.log(data));
+			} else {
+				alert("Login Required");
+			}
+		}
+
+	</script>
+</html>

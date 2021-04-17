@@ -53,7 +53,7 @@
 				cardTitle.className = "card-title"
 				cardTitle.innerHTML = product["productName"]
 				cardText.className = "card-text"
-				cardText.innerHTML = product["price"]
+				cardText.innerHTML = `€${product["price"]}`
 				cardBody.appendChild(cardTitle)
 				cardBody.appendChild(cardText)
 				card.appendChild(cardBody)

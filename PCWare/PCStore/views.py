@@ -31,8 +31,8 @@ def index(request):
 
 def allProducts(request):
     all_p = Product.objects.all()
-    format = request.GET.get("format", "")
-    if format == "json":
+    httpform = request.GET.get("format", "")
+    if httpform == "json":
         serialProducts = serializers.serialize("json", all_p)
         return HttpResponse(serialProducts, content_type="application/json")
     return render(request, 'all-products.html', {'products': all_p, "Message": None})
@@ -40,6 +40,10 @@ def allProducts(request):
 
 def singleProduct(request, prodId):
     prod = get_object_or_404(Product, pk=prodId)
+    httpform = request.GET.get("format", "")
+    if httpform == "json":
+        serialProducts = serializers.serialize("json", [prod])
+        return HttpResponse(serialProducts, content_type="application/json")
     return render(request, 'single-product.html', {'product': prod})
 
 
@@ -103,8 +107,7 @@ def addCart(request, productID):
     user = request.user
     all_p = Product.objects.all()
     if user.is_anonymous:
-        tokenjson = json.loads(request.META.get("HTTP_AUTHORIZATION"))
-        token = tokenjson["token"]
+        token = request.META.get("HTTP_AUTHORIZATION")
         user = Token.objects.get(key=token).user
 
     cart = Cart.objects.filter(userID=user).first()

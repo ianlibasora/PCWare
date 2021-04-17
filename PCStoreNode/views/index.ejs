@@ -81,6 +81,7 @@
 				}).then(response => response.json()).then(function(data) {
 					console.log(data)
 					window.token = data
+					sessionStorage.setItem("Token", window.token.token)
 					console.log(window.token)
 				})
 			}, 
