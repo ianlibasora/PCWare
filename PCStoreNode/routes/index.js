@@ -15,4 +15,8 @@ router.get('/single-product/:productID', function(req, res, next) {
   res.render('product', {title: 'PCStore - Products', productID});
 });
 
+router.get('/basket/view-basket', function(req, res, next) {
+  res.render('basket', {title: 'PCStore - Basket'});
+});
+
 module.exports = router;

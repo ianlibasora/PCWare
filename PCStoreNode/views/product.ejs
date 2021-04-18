@@ -36,12 +36,15 @@
 		.then(resp => {
 			if (!resp.ok) {
 				throw new Error("Fetch error");
+			} else {
+				return resp.json()		
 			}
-			return resp.json()		
 		})
 		.then(data => {
-			product = data[0]["fields"]
-			console.log(product)
+			let productID = data["product"]["pk"]
+			let product = data["product"]["fields"]
+			let categoryName = data["category"]["fields"]["categoryName"]
+			
 			let imgContainer = document.getElementById("img-container")
 			let img = document.createElement("img")
 			img.className = "img-thumbnail s-product-card-img-style"
@@ -57,8 +60,11 @@
 			cardTitle.innerHTML = product["productName"]
 			dContainer.appendChild(cardTitle)
 
-			let spacer = document.createElement("br")
-			dContainer.appendChild(spacer)
+			let cardSubT = document.createElement("p")
+			cardSubT.className = "card-subtitle"
+			cardSubT.innerHTML = categoryName
+			dContainer.appendChild(cardSubT)
+			dContainer.appendChild(document.createElement("br"))
 
 			let productDetails = document.createElement("p")
 			productDetails.className = "card-text"
@@ -78,9 +84,9 @@
 			let addbtn = document.createElement("button")
 			addbtn.className = "btn btn-primary"
 			addbtn.innerHTML = "Add to cart"
-			addbtn.onclick = `addCard(<%= productID %>)`
+			addbtn.onclick = `addCart(${productID})`
 			addbtn.addEventListener("click", () => {
-				addCart(product["productID"])
+				addCart(productID)
 			})
 
 			dContainer.appendChild(addbtn)
@@ -90,7 +96,7 @@
 		function addCart(productID) {
 			if (sessionStorage.getItem("Token") != null) {
 				fetch(
-					`http://localhost:8000/basket/add-cart/<%= productID %>`, 
+					`http://localhost:8000/basket/add-cart/${productID}`, 
 					{
 						method: "GET",
 						headers: {
@@ -99,11 +105,10 @@
 							'Authorization': sessionStorage.getItem("Token")
 						}
 					}
-				).then(response => response.json()).then(data => console.log(data));
+				).then(resp => window.location.replace("/all-products"));
 			} else {
 				alert("Login Required");
 			}
 		}
-
 	</script>
 </html>

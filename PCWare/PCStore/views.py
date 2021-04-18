@@ -42,8 +42,11 @@ def singleProduct(request, prodId):
     prod = get_object_or_404(Product, pk=prodId)
     httpform = request.GET.get("format", "")
     if httpform == "json":
-        serialProducts = serializers.serialize("json", [prod])
-        return HttpResponse(serialProducts, content_type="application/json")
+        payload = {
+            "product": json.loads(serializers.serialize("json", [prod]))[0],
+            "category": json.loads(serializers.serialize("json", [prod.category]))[0]
+        }
+        return HttpResponse(json.dumps(payload), content_type="application/json")
     return render(request, 'single-product.html', {'product': prod})
 
 
@@ -99,8 +102,6 @@ def logout_view(request):
     return redirect('/')
 
 
-
-
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
 def addCart(request, productID):
@@ -108,7 +109,7 @@ def addCart(request, productID):
     all_p = Product.objects.all()
     if user.is_anonymous:
         token = request.META.get("HTTP_AUTHORIZATION")
-        user = Token.objects.get(key=token).user
+        user = get_object_or_404(Token, key=token).user
 
     cart = Cart.objects.filter(userID=user).first()
     if cart is None:
@@ -130,9 +131,14 @@ def addCart(request, productID):
     return render(request, 'all-products.html', {'products': all_p, "Message": f"Added {item.productName} to cart."})
 
 
-@login_required
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def removeCart(request, productID):
     user = request.user
+    if user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
+
     cart = get_object_or_404(Cart, userID=user)
     product = get_object_or_404(Product, pk=productID)
     cartItem = get_object_or_404(CartItem, cartID=cart, productID=productID)
@@ -148,19 +154,42 @@ def removeCart(request, productID):
     return render(request, "all-products.html", {"products": allP, "Message": f"Removed {product.productName} from cart."})
 
 
-@login_required
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def showBasket(request):
     user = request.user
+    if user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
     cart = Cart.objects.filter(userID=user).first()
 
     if cart is None:
+        # Handle 404 in frontend
         return render(request, 'basket.html', {'Content': False})
 
     cartItem = CartItem.objects.filter(cartID=cart.cartID)
     if cartItem is None:
+        # Handle 404 in frontend
         return render(request, 'basket.html', {'Content': False})
-    return render(request, 'basket.html', {"cart": cart, 'cartItem': cartItem, "Content": True})
 
+    httpform = request.GET.get("format", "")
+    if httpform == "json":
+        cartJSON = {
+            "total": float(cart.total)
+        }
+        cartItemJSON = []
+        for item in cartItem:
+            tmp = {
+                "quantity": item.quantity,
+                "total": float(item.total),
+                "product": json.loads(serializers.serialize("json", [item.productID]))[0],
+                "category": json.loads(serializers.serialize("json", [item.productID.category]))[0]
+            }
+            cartItemJSON.append(tmp)
+
+        cartJSON["cartitems"] = cartItemJSON
+        return HttpResponse(json.dumps(cartJSON), content_type="application/json")
+    return render(request, 'basket.html', {"cart": cart, 'cartItem': cartItem, "Content": True})
 
 @login_required
 def getCheckout(request):
