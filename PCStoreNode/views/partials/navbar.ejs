@@ -29,13 +29,8 @@
 			</ul>
 		</div>
 
-		<% if (typeof window !== "undefined" && typeof window.token === "undefined") { %>
-			<a class="login-link" href="/account/logout">Logout</a>
-			<a class="login-link" href="/account">Account</a>
-		<% } else { %>
-			<a class="login-link" href="/account/login">Login</a>
-			<a class="login-link" href="/account/register">Sign Up</a>
-		<% } %>
+		<a id="login-logout" class="login-link" href="/account/login">Login</a>
+		<a id="account-register" class="login-link" href="/account/register">Sign Up</a>
 		<a class="login-link" href="/basket/view-basket">View basket</a>
 
 		<button class="navbar-toggler nav-toggler-style" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">

@@ -88,6 +88,16 @@
 			true
 		)
 
+		// --- NEED TO IMPROVE AT A LATER STAGE ------
+		if (sessionStorage.getItem("Token") != null) {
+			let log = document.getElementById("login-logout")
+			log.innerHTML = "Logout"
+			// HANDLE LOGOUT OPERATION
+			let ac = document.getElementById("account-register")
+			ac.innerHTML = "Account"
+			ac.href = "/account/register"
+		}
+
 		function addCart(productID) {
 			if (window.token) {
 				fetch(

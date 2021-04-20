@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<%- include("./partials/header"); %>
+	</head>
+	<body>
+		<%- include("./partials/navbar"); %>
+		<div class="content-section">
+			<br>
+			<section id="content-container" class="container">
+				<!-- Dynamic insertion -->
+			</section>
+			<br><br>
+		</div>
+		
+		<%- include("./partials/footer"); %>
+	</body>
+	<script>
+		if (sessionStorage.getItem("Token") != null) {
+			fetch("http://localhost:8000/basket/view-basket?format=json", {
+				method: "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'Authorization': sessionStorage.getItem("Token")
+				}
+			}).then(resp => {
+				if (!resp.ok) {
+					throw new Error("Fetch error");
+				} else {
+					return resp.json()
+				}
+			})
+			.then(data => {
+				let container = document.getElementById("content-container")
+				data["cartitems"].forEach(cartitem => {
+					let productID = cartitem["product"]["pk"]
+					let product = cartitem["product"]["fields"]
+					let categoryName = cartitem["category"]["fields"]["categoryName"]
+
+					let cardContainer = document.createElement("div")
+					cardContainer.className = "card mb-3"
+					cardContainer.style = "background-color: #bfbfbf"
+
+					let cardContent = document.createElement("div")
+					cardContent.className = "row g-0 p-4 justify-content-md-center"
+					cardContainer.appendChild(cardContent)
+
+					let imgContainer = document.createElement("div")
+					imgContainer.className = "col-md-4"
+					let img = document.createElement("img")
+					img.className = "basket-card-img-style p-3"
+					img.src = `http://localhost:8000/media/${product["picture"]}`
+					img.alt = "Product Image"
+					img.width = "200"
+					img.height = "200"
+					imgContainer.appendChild(img)
+					cardContent.appendChild(imgContainer)
+
+					let cardTextContainer = document.createElement("div")
+					cardTextContainer.className = "col-md-7"
+					let cardBody = document.createElement("div")
+					cardBody.className = "card-body"
+
+					let pName = document.createElement("h5")
+					pName.className = "card-title"
+					pName.innerHTML = product["productName"]
+					cardBody.appendChild(pName)
+
+					let pCat = document.createElement("p")
+					pCat.className = "card-subtitle"
+					pCat.innerHTML = categoryName
+					cardBody.appendChild(pCat)
+					cardBody.appendChild(document.createElement("br"))
+
+					let price = document.createElement("h4")
+					price.className = "card-text"
+					price.innerHTML = `€${product["price"]}`
+					cardBody.appendChild(price)
+
+					let quantity = document.createElement("p")
+					quantity.className = "card-text"
+					quantity.innerHTML = `Quantity ${cartitem["quantity"]}`
+					cardBody.appendChild(quantity)
+
+					let add = document.createElement("button")
+					add.className = "card-link btn btn-primary"
+					add.innerHTML = "+"
+					add.onclick = `addCart(${productID})`
+					add.addEventListener("click", () => {
+						addCart(productID)
+					})
+					cardBody.appendChild(add)
+
+					let remove = document.createElement("button")
+					remove.className = "card-link btn btn-danger"
+					remove.innerHTML = "-"
+					remove.onclick = `removeCart(${productID})`
+					remove.addEventListener("click", () => {
+						removeCart(productID)
+					})
+					cardBody.appendChild(remove)
+
+					cardTextContainer.appendChild(cardBody)
+					cardContent.appendChild(cardTextContainer)
+					container.appendChild(cardContainer)
+				})
+				// Cart Total
+				let messageContainer = document.createElement("div")
+				messageContainer.className = "row justify-content-md-center"
+				
+				let cardContainer = document.createElement("div")
+				cardContainer.className = "col col-lg-3"
+				messageContainer.appendChild(cardContainer)
+				
+				let cardTextContainer = document.createElement("div")
+				cardTextContainer.className = "card text-center"
+				cardContainer.appendChild(cardTextContainer)
+
+				let cardBody = document.createElement("div")
+				cardBody.className = "card-body"
+				cardTextContainer.appendChild(cardBody)
+
+				let messageTitle = document.createElement("h4")
+				messageTitle.className = "card-title"
+				messageTitle.innerHTML = `Subtotal (€) ${data["total"]}`
+				let backLink = document.createElement("a")
+				backLink.href = "checkout"
+				backLink.className = "btn btn-primary"
+				backLink.innerHTML = "Proceed to checkout"
+				cardBody.appendChild(messageTitle)
+				cardBody.appendChild(backLink)
+
+				container.appendChild(messageContainer)
+			})
+			.catch(err => {
+				let container = document.getElementById("content-container")
+				
+				let messageContainer = document.createElement("div")
+				messageContainer.className = "row justify-content-md-center"
+				
+				let cardContainer = document.createElement("div")
+				cardContainer.className = "col col-lg-3"
+				messageContainer.appendChild(cardContainer)
+				
+				let cardTextContainer = document.createElement("div")
+				cardTextContainer.className = "card text-center"
+				cardContainer.appendChild(cardTextContainer)
+
+				let cardBody = document.createElement("div")
+				cardBody.className = "card-body"
+				cardTextContainer.appendChild(cardBody)
+
+				let messageTitle = document.createElement("h3")
+				messageTitle.className = "card-title"
+				messageTitle.innerHTML = "Cart is empty"
+				let backLink = document.createElement("a")
+				backLink.href = "/all-products"
+				backLink.className = "btn btn-primary"
+				backLink.innerHTML = "Back to shopping"
+				cardBody.appendChild(messageTitle)
+				cardBody.appendChild(backLink)
+
+				container.appendChild(messageContainer)
+			})
+		} else {
+			alert("Login Required")
+		}
+
+		function addCart(productID) {
+			if (sessionStorage.getItem("Token") != null) {
+				fetch(
+					`http://localhost:8000/basket/add-cart/${productID}`, 
+					{
+						method: "GET",
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': sessionStorage.getItem("Token")
+						}
+					}
+				).then(resp => window.location.replace("/all-products"));
+			} else {
+				alert("Login Required");
+			}
+		}
+
+		function removeCart(productID) {
+			if (sessionStorage.getItem("Token") != null) {
+				fetch(
+					`http://localhost:8000/basket/remove-cart/${productID}`, 
+					{
+						method: "GET",
+						headers: {
+							'Accept': 'application/json',
+							'Content-Type': 'application/json',
+							'Authorization': sessionStorage.getItem("Token")
+						}
+					}
+				).then(resp => window.location.replace("/all-products"));
+			} else {
+				alert("Login Required");
+			}
+		}
+	</script>
+</html>

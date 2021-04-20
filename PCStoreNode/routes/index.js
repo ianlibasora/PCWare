@@ -23,4 +23,8 @@ router.get('/account/register', function(req, res, next) {
   res.render('register', {title: 'Registration'});
 });
 
+router.get('/basket/view-basket', function(req, res, next) {
+  res.render('basket', {title: 'PCStore - Basket'});
+});
+
 module.exports = router;
