@@ -19,7 +19,7 @@ router.get('/account', function(req, res, next) {
   res.render('account', {title: 'User Home'});
 });
 
-router.get('account/register', function(req, res, next) {
+router.get('/account/register', function(req, res, next) {
   res.render('register', {title: 'Registration'});
 });
 
