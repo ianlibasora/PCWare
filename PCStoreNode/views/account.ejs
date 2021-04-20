@@ -1,46 +1,62 @@
 <!DOCTYPE html>
 <html>
-    <br>
-    <h1>User Home</h1>
+	<head>
+		<%- include("./partials/header"); %>
+	</head>
+	<body>
+		<%- include("./partials/navbar"); %>
+		<div class="content-section">
+			<section class="container">
+				<br />
+				<h1>User Home</h1>
 
-    <div class="row row-cols-auto p-1 gy-3">
-        <div class="col-sm-4">
-            <div class="card h-100 m-2">
-                <a href="my-orders/"><img src="{% static "/images/document.png" %}" class="card-img-top p-2 img-thumbnail" alt="Button image" width="400" height="400"></a>
-                <div class="card-body p-1">
-                    <h5 class="card-title text-center">My Orders</h5>
-                </div>
-            </div>
-        </div>
+				<div class="row row-cols-auto p-1 gy-3">
+					<div class="col-sm-4">
+						<div class="card h-100 m-2">
+							<a href="my-orders/"
+								><img
+									src="/imgs/document.png"
+									class="card-img-top p-2 img-thumbnail"
+									alt="Button image"
+									width="400"
+									height="400"
+							/></a>
+							<div class="card-body p-1">
+								<h5 class="card-title text-center">My Orders</h5>
+							</div>
+						</div>
+					</div>
 
-        {% if user.isAdmin or user.is_superuser %}
-            <div class="col-sm-4">
-                <div class="card h-100 m-2">
-                    <a href="product-form/"><img src="{% static "/images/document.png" %}" class="card-img-top p-2 img-thumbnail" alt="Button image" width="400" height="400"></a>
-                    <div class="card-body p-1">
-                        <h5 class="card-title text-center">Add Products</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="card h-100 m-2">
-                    <a href="category-form/"><img src="{% static "/images/document.png" %}" class="card-img-top p-2 img-thumbnail" alt="Button image" width="400" height="400"></a>
-                    <div class="card-body p-1">
-                        <h5 class="card-title text-center">Add Categories</h5>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-4">
-                <div class="card h-100 m-2">
-                    <a href="admin-view-orders/"><img src="{% static "/images/document.png" %}" class="card-img-top p-2 img-thumbnail" alt="Button image" width="400" height="400"></a>
-                    <div class="card-body p-1">
-                        <h5 class="card-title text-center">Admin View All Orders</h5>
-                   </div>
-                </div>
-            </div>
-        {% endif %}
-    </div>
+					<div class="col-sm-4">
+						<div class="card h-100 m-2">
+							<a href="admin-view-orders/"
+								><img
+									src="/imgs/document.png"
+									class="card-img-top p-2 img-thumbnail"
+									alt="Button image"
+									width="400"
+									height="400"
+							/></a>
+							<div class="card-body p-1">
+								<h5 class="card-title text-center">Admin View All Orders</h5>
+							</div>
+						</div>
+					</div>
+				</div>
 
-    <br><br><br>
-    <p>Icons made by <a href="https://creativemarket.com/eucalyp" title="Eucalyp">Eucalyp</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></p>
-</html> 
+				<br /><br /><br />
+				<p>
+					Icons made by
+					<a href="https://creativemarket.com/eucalyp" title="Eucalyp"
+						>Eucalyp</a
+					>
+					from
+					<a href="https://www.flaticon.com/" title="Flaticon"
+						>www.flaticon.com</a
+					>
+				</p>
+			</section>
+			<%- include("./partials/footer"); %>
+		</div>
+	</body>
+</html>
