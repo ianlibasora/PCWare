@@ -27,6 +27,10 @@ router.get('/account/login', function(req, res, next) {
   res.render('login', {title: 'PCStore - Login'});
 });
 
+router.get('/account/logout', function(req, res, next) {
+  res.render('logout');
+});
+
 router.get('/basket/view-basket', function(req, res, next) {
   res.render('basket', {title: 'PCStore - Basket'});
 });

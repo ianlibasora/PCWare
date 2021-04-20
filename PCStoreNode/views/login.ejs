@@ -68,6 +68,8 @@
 						window.token = data;
 						sessionStorage.setItem("Token", window.token.token);
 						console.log(window.token);
+						alert("You are now signed in!");
+						window.location.replace("/");
 					});
 			},
 			true
