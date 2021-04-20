@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<%- include("./partials/header"); %>
+    </head>
+	<body>
+		<%- include("./partials/navbar"); %>
+        <div class="col-6">
+            <h3>Register a new user</h3>
+            <form id="register-form" action="." method="POST">
+                <label for="username">Username</label>
+                <input id="form-username" name="username" type="text" placeholder="Your Username" required>
+
+                <label for="firstname">First Name</label>
+                <input id="form-firstname" name="first_name" type="text" required>
+
+                <label for="lastname">Last Name</label>
+                <input id="form-lastname" name="last_name" type="text" placeholder="Doe" required>
+
+                <label for="email">Email</label>
+                <input id="form-email" name="email" type="text" required>
+
+                <label for="contactnumber">Contact Number</label>
+                <input id="form-number" name="contactNum" type="text" placeholder="i.e,. 083 XXX XXXX" required>
+
+                <label for="password">Password</label>
+                <input id="form-password" name="password" type="text" placeholder="Your Password" required>
+                
+                <label for="passwordconf">Password Confirmation</label>
+                <input id="form-passwordconf" type="text" placeholder="Your Password" required>
+            </form>
+
+            <button type="submit">Confirm</button>
+        </div>
+
+        <%- include("./partials/footer"); %>
+    </body>
+
+    <script>
+        let registerform = document.getElementById("register-form")
+        registerform.addEventListener(
+            "submit",
+            (event) => {
+                event.preventDefault();
+
+                let pass = document.getElementById("form-password").value
+                let passconf = document.getElementById("form-passwordconf").value
+
+                if(Auth(pass, passconf) == 1) {
+                    console.log("Invalid password!");
+                    break;
+                }
+
+            }
+        )
+
+        function Auth(pass, passconf) {
+            var flag = 0
+            if(pass != passconf && pass > 7) {
+                console.log("Password must be the same and have 8 or more characters!");
+                flag = 1;
+            }
+
+            return flag;
+        };
+        
+    </script>
+</html>

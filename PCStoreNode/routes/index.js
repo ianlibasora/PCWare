@@ -7,12 +7,20 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/all-products', function(req, res, next) {
-  res.render('all-products', { title: 'PCSTore - All Products' });
+  res.render('all-products', { title: 'PCStore - All Products' });
 });
 
 router.get('/single-product/:productID', function(req, res, next) {
   const productID = req.params.productID;
   res.render('product', {title: 'PCStore - Products', productID});
+});
+
+router.get('/account', function(req, res, next) {
+  res.render('account', {title: 'User Home'});
+});
+
+router.get('account/register', function(req, res, next) {
+  res.render('register', {title: 'Registration'});
 });
 
 module.exports = router;
