@@ -5,80 +5,103 @@
 	</head>
 	<body>
 		<%- include("./partials/navbar"); %>
-		<div class="container">
-			<div class="col-6">
-				<h3>Register a new user</h3>
-				<form id="register-form" action="." method="POST">
-					<div class="field">
-						<label for="username">Username</label>
-						<input
-							id="form-username"
-							name="username"
-							type="text"
-							placeholder="Your Username"
-							required
-						/>
-					</div>
 
-					<div class="field">
-						<label for="firstname">First Name</label>
-						<input id="form-firstname" name="first_name" type="text" required />
-					</div>
+		<div class="content-section">
+			<section class="container">
+				<div class="container">
+					<div class="col-6">
+						<h3>Register a new user</h3>
+						<form id="register-form" action="." method="POST">
+							<div class="form-group">
+								<label for="username">Username</label>
+								<input
+									id="form-username"
+									name="username"
+									class="form-control"
+									type="text"
+									placeholder="Your Username"
+									required
+								/>
+							</div>
 
-					<div class="field">
-						<label for="lastname">Last Name</label>
-						<input
-							id="form-lastname"
-							name="last_name"
-							type="text"
-							placeholder="Doe"
-							required
-						/>
-					</div>
+							<div class="form-group">
+								<label for="firstname">First Name</label>
+								<input
+									id="form-firstname"
+									name="first_name"
+									class="form-control"
+									type="text"
+									required
+								/>
+							</div>
 
-					<div class="field">
-						<label for="email">Email</label>
-						<input id="form-email" name="email" type="text" required />
-					</div>
+							<div class="form-group">
+								<label for="lastname">Last Name</label>
+								<input
+									id="form-lastname"
+									name="last_name"
+									class="form-control"
+									type="text"
+									placeholder="Doe"
+									required
+								/>
+							</div>
 
-					<div class="filed">
-						<label for="contactnumber">Contact Number</label>
-						<input
-							id="form-number"
-							name="contactNum"
-							type="text"
-							placeholder="i.e,. 083 XXX XXXX"
-							required
-						/>
-					</div>
+							<div class="form-group">
+								<label for="email">Email</label>
+								<input
+									id="form-email"
+									name="email"
+									type="email"
+									class="form-control"
+									required
+								/>
+							</div>
 
-					<div class="field">
-						<label for="password">Password</label>
-						<input
-							id="form-password"
-							name="password"
-							type="text"
-							placeholder="Your Password"
-							required
-						/>
-					</div>
+							<div class="form-group">
+								<label for="contactnumber">Contact Number</label>
+								<input
+									id="form-number"
+									name="contactNum"
+									class="form-control"
+									type="text"
+									placeholder="i.e,. 083 XXX XXXX"
+									required
+								/>
+							</div>
 
-					<div class="field">
-						<label for="passwordconf">Password Confirmation</label>
-						<input
-							id="form-passwordconf"
-							type="text"
-							placeholder="Your Password"
-							required
-						/>
-					</div>
+							<div class="form-group">
+								<label for="password">Password</label>
+								<input
+									id="form-password"
+									name="password"
+									class="form-control"
+									type="password"
+									placeholder="Your password"
+									required
+								/>
+							</div>
 
-					<input type="submit" value="Confirm" />
-				</form>
-			</div>
+							<div class="form-group">
+								<label for="passwordconf">Password Confirmation</label>
+								<input
+									id="form-passwordconf"
+									name="passwordconf"
+									class="form-control"
+									type="password"
+									placeholder="Re-enter your password"
+									required
+								/>
+							</div>
+							<br />
+							<input type="submit" value="Confirm" />
+						</form>
+					</div>
+				</div>
+				<br />
+			</section>
+			<%- include("./partials/footer"); %>
 		</div>
-
-		<%- include("./partials/footer"); %>
 	</body>
 
 	<script>

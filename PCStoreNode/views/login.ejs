@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<%- include("./partials/header"); %>
+	</head>
+	<body>
+		<%- include("./partials/navbar"); %>
+
+		<div class="content-section">
+			<section class="container">
+				<div class="container">
+					<div class="col-6">
+						<h3>Sign in</h3>
+						<form id="login-form" action="." method="POST">
+							<div class="form-group">
+								<label for="username">Username</label>
+								<input
+									id="form-username"
+									name="username"
+									class="form-control"
+									type="text"
+									placeholder="Your Username"
+									required
+								/>
+							</div>
+
+							<div class="form-group">
+								<label for="password">Password</label>
+								<input
+									id="form-password"
+									name="password"
+									class="form-control"
+									type="password"
+									placeholder="Your password"
+									required
+								/>
+							</div>
+							<br />
+							<input type="submit" value="Confirm" />
+						</form>
+					</div>
+				</div>
+			</section>
+			<%- include("./partials/footer"); %>
+		</div>
+	</body>
+
+	<script>
+		let loginform = document.getElementById("login-form");
+		loginform.addEventListener(
+			"submit",
+			(event) => {
+				event.preventDefault();
+
+				let user = document.getElementById("form-username").value;
+				let pass = document.getElementById("form-password").value;
+				fetch("http://localhost:8000/token/", {
+					method: "POST",
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "application/json",
+						// 'Authorization': `Token ${auth_token}`
+					},
+					body: JSON.stringify({ username: user, password: pass }),
+				})
+					.then((response) => response.json())
+					.then(function (data) {
+						window.token = data;
+						sessionStorage.setItem("Token", window.token.token);
+						console.log(window.token);
+					});
+			},
+			true
+		);
+	</script>
+</html>

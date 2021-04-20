@@ -16,11 +16,15 @@ router.get('/single-product/:productID', function(req, res, next) {
 });
 
 router.get('/account', function(req, res, next) {
-  res.render('account', {title: 'User Home'});
+  res.render('account', {title: 'PCStore - User Home'});
 });
 
 router.get('/account/register', function(req, res, next) {
-  res.render('register', {title: 'Registration'});
+  res.render('register', {title: 'PCStore - Registration'});
+});
+
+router.get('/account/login', function(req, res, next) {
+  res.render('login', {title: 'PCStore - Login'});
 });
 
 router.get('/basket/view-basket', function(req, res, next) {
