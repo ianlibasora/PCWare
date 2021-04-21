@@ -92,21 +92,21 @@ class UserSignUp(CreateView):
         return redirect("/")
 
 
-@api_view(['POST',])
-def RegistrationView(request):
-    if request.method == 'POST':
-        serializer = RegistrationSerializer(data=request.data)
-        data = {}
-
-        if serializer.is_valid():
-            user = serializer.save()
-            data['response'] = "Successfully registered a new user."
-            data['email'] = user.email
-            data['username'] = user.username
-        else:
-            data = serializer.errors
-
-    return Response(data)
+# @api_view(['POST',])
+# def RegistrationView(request):
+#     if request.method == 'POST':
+#         serializer = RegistrationSerializer(data=request.data)
+#         data = {}
+#
+#         if serializer.is_valid():
+#             user = serializer.save()
+#             data['response'] = "Successfully registered a new user."
+#             data['email'] = user.email
+#             data['username'] = user.username
+#         else:
+#             data = serializer.errors
+#
+#     return Response(data)
 
 
 class Login(LoginView):
