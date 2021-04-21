@@ -259,8 +259,8 @@ def userHomeView(request):
         token = request.META.get("HTTP_AUTHORIZATION")
         user = get_object_or_404(Token, key=token).user
         if user.is_superuser or user.isAdmin:
-            return HttpResponse(json.dumps({"admin": 1}), content_type="application/json")
-        return HttpResponse(json.dumps({"admin": 0}), content_type="application/json")
+            return HttpResponse(json.dumps({"username": user.username, "admin": 1}), content_type="application/json")
+        return HttpResponse(json.dumps({"username": user.username, "admin": 0}), content_type="application/json")
     return render(request, "account.html")
 
 
@@ -275,8 +275,8 @@ def myOrders(request):
     orders = Order.objects.filter(userID=user)
     httpform = request.GET.get("format", "")
     if httpform == "json":
-        serialOrders = serializers.serialize("json", orders)
-        return HttpResponse(serialOrders, content_type="application/json")
+        serialOrders = json.loads(serializers.serialize("json", orders))
+        return HttpResponse(json.dumps({"username": user.username, "orders": serialOrders}), content_type="application/json")
 
     return render(request, "all-orders.html", {"orders": orders})
 

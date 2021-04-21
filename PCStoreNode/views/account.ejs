@@ -8,7 +8,7 @@
 		<div class="content-section">
 			<section class="container">
 				<br />
-				<h1>User Home</h1>
+				<h1 id="welcome">Welcome</h1>
 
 				<div class="row row-cols-auto p-1 gy-3">
 					<div class="col-sm-4">
@@ -80,6 +80,7 @@
 			})
 			.then(resp => resp.json())
 			.then(data => {
+				document.getElementById("welcome").innerHTML = `Welcome ${data["username"]}`
 				if (data["admin"]) {
 					document.getElementById("admin-order-card").style.display = "block"
 				}

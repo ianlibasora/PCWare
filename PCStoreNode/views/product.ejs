@@ -94,7 +94,7 @@
 		.catch(err => alert("Error. Invalid productID"))
 
 		function addCart(productID) {
-			if (sessionStorage.getItem("Token") != null) {
+			if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
 				fetch(
 					`http://localhost:8000/basket/add-cart/${productID}`, 
 					{
