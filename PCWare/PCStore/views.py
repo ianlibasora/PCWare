@@ -7,7 +7,7 @@ from django.views.generic import CreateView
 from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import authentication_classes, permission_classes
+from rest_framework.decorators import authentication_classes, permission_classes, api_view
 from rest_framework.permissions import IsAuthenticated
 
 from .serializers import *
@@ -90,6 +90,23 @@ class UserSignUp(CreateView):
         user = form.save()
         login(self.request, user)
         return redirect("/")
+
+
+@api_view(['POST',])
+def RegistrationView(request):
+    if request.method == 'POST':
+        serializer = RegistrationSerializer(data=request.data)
+        data = {}
+
+        if serializer.is_valid():
+            user = serializer.save()
+            data['response'] = "Successfully registered a new user."
+            data['email'] = user.email
+            data['username'] = user.username
+        else:
+            data = serializer.errors
+
+    return Response(data)
 
 
 class Login(LoginView):
@@ -280,3 +297,7 @@ class OrderViewSet(viewsets.ModelViewSet):
     serializer_class = OrderSerializer
     authentication_classes = []
     permission_classes = []
+
+class RegisterViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = RegistrationSerializer

@@ -66,10 +66,14 @@
 					.then((response) => response.json())
 					.then(function (data) {
 						window.token = data;
-						sessionStorage.setItem("Token", window.token.token);
 						console.log(window.token);
-						alert("You are now signed in!");
-						window.location.replace("/");
+						if (data != "undefined" || data != "null") {
+							alert("You are now signed in!");
+							sessionStorage.setItem("Token", window.token.token);
+							window.location.replace("/");
+						} else {
+							alert("There is a issue logging in.");
+						}
 					});
 			},
 			true

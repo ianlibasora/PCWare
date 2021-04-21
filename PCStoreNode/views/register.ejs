@@ -64,8 +64,9 @@
 									id="form-number"
 									name="contactNum"
 									class="form-control"
-									type="text"
-									placeholder="i.e,. 083 XXX XXXX"
+									type="tel"
+									placeholder="i.e,. 08XXXXXXXX"
+									pattern="[0-9]{10}"
 									required
 								/>
 							</div>
@@ -109,14 +110,39 @@
 		registerform.addEventListener("submit", (event) => {
 			event.preventDefault();
 
+			let user = document.getElementById("form-username").value;
+			let fn = document.getElementById("form-firstname").value;
+			let ln = document.getElementById("form-lastname").value;
+			let emailInp = document.getElementById("form-email").value;
+			let number = document.getElementById("form-number").value;
 			let pass = document.getElementById("form-password").value;
 			let passconf = document.getElementById("form-passwordconf").value;
 			console.log(pass.length);
 
-			if (pass != passconf || pass.length < 8) {
-				alert("Password must be the same and have 8 or more characters!");
+			if (pass.length < 8) {
+				alert("Password must have 8 or more characters!");
+			} else if (pass != passconf) {
+				alert("Password must be the same!");
 			} else {
 				alert("Account created!");
+
+				fetch("http://localhost:8000/account/register/", {
+					method: "POST",
+					headers: {
+						Accept: "application/json",
+						"Content-Type": "application/json",
+						// 'Authorization': `Token ${auth_token}`
+					},
+					body: JSON.stringify({
+						username: user,
+						first_name: fn,
+						last_name: ln,
+						email: emailInp,
+						contactNum: number,
+						password: pass,
+					}),
+				});
+
 				window.location.replace("/");
 			}
 		});
