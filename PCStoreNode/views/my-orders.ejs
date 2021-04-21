@@ -52,7 +52,6 @@
 					row.appendChild(orderID)
 
 					let orderDate = document.createElement("td")
-					// let date = new Date(order["fields"]["date"])
 					orderDate.innerHTML = new Date(order["fields"]["date"]).toUTCString()
 					row.appendChild(orderDate)
 

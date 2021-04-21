@@ -20,14 +20,8 @@
 							<th class="col">&nbsp;</th>
 						</tr>
 					</thead>
-					<tbody>
-						<tr>
-							<!-- <td id=orderID>{{ order.orderID }}</td>
-							<td>{{ order.date }}</td>
-							<td>{{ order.userID }}</td>
-							<td>{{ order.total }}</td>
-							<td><a href="order-info/{{ order.orderID }}">More info</a></td> -->
-						</tr>
+					<tbody id="tableBody">
+						<!-- --- Dynamic insertion --- -->
 					</tbody>
 				</table>
 				<a href="..">Back to user home</a>
@@ -38,11 +32,50 @@
 	</body>
 
 	<script>
-		fetch("http://localhost:8000/api/orders/?format=json")
-			.then((response) => response.json())
-			.then((data) => {
-				console.log(data);
-		});
+		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
+			fetch("http://localhost:8000/account/admin-view-orders/?format=json", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					"Accept": "application/json",
+					"Authorization": sessionStorage.getItem("Token")
+				}
+			})
+			.then(resp => resp.json())
+			.then(data => {
+				let tableBody = document.getElementById("tableBody")
+				data.forEach(order => {
+					let row = document.createElement("tr")
+
+					let orderID = document.createElement("td")
+					orderID.innerHTML = order["order"]["pk"]
+					row.appendChild(orderID)
+
+					let orderDate = document.createElement("td")
+					orderDate.innerHTML = new Date(order["order"]["fields"]["date"]).toUTCString()
+					row.appendChild(orderDate)
+
+					let orderUser = document.createElement("td")
+					orderUser.innerHTML = order["username"]
+					row.appendChild(orderUser)
+
+					let orderTotal = document.createElement("td")
+					orderTotal.innerHTML = order["order"]["fields"]["total"]
+					row.appendChild(orderTotal)
+
+					let orderMoreInfo = document.createElement("td")
+					let orderInfoLink = document.createElement("a")
+					orderInfoLink.href = `order-info/${order["order"]["pk"]}`
+					orderInfoLink.innerHTML = "More info"
+					orderMoreInfo.appendChild(orderInfoLink)
+					row.appendChild(orderMoreInfo)
+
+					tableBody.appendChild(row)
+				})
+			})
+		} else {
+			window.location.replace("/account/login")
+		}
 		
 		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
 			let log = document.getElementById("login-logout")

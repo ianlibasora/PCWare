@@ -233,14 +233,26 @@ def getCheckout(request):
         return render(request, 'checkout.html', {'address_form': AddressForm(), 'payment_form': PaymentForm()})
 
 
-@login_required
-@admin_required
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def adminViewOrders(request):
     allOrders = Order.objects.all()
-    httpform = request.GET.get("format", "")
-    if httpform == "json":
-        serialOrders = serializers.serialize("json", allOrders)
-        return HttpResponse(serialOrders, content_type="application/json")
+
+    user = request.user
+    if user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
+        if not user.is_superuser and not user.isAdmin:
+            return HttpResponse(json.dumps({"Response": "User is not an admin"}), content_type="application/json")
+
+        payload = []
+        for order in allOrders:
+            tmp = {
+                "username": order.userID.username,
+                "order": json.loads(serializers.serialize("json", [order]))[0]
+            }
+            payload.append(tmp)
+        return HttpResponse(json.dumps(payload), content_type="application/json")
     return render(request, "all-orders.html", {"orders": allOrders})
 
 
@@ -299,11 +311,13 @@ class ProductViewSet(viewsets.ModelViewSet):
     authentication_classes = []
     permission_classes = []
 
+
 class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
     authentication_classes = []
     permission_classes = []
+
 
 class RegisterViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
