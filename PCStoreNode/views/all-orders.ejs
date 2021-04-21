@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<%- include("./partials/header"); %>
+	</head>
+	<body>
+		<%- include("./partials/navbar"); %>
+		<div class="content-section">
+			<section class="container">
+				<br />
+				<h2>Order Overview</h2>
+
+				<table class="table table-light table-striped">
+					<thead>
+						<tr>
+							<th class="col">Order Number</th>
+							<th class="col">Order Date</th>
+							<th class="col">Username</th>
+							<th class="col">Order Total (€)</th>
+							<th class="col">&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<!-- <td id=orderID>{{ order.orderID }}</td>
+							<td>{{ order.date }}</td>
+							<td>{{ order.userID }}</td>
+							<td>{{ order.total }}</td>
+							<td><a href="order-info/{{ order.orderID }}">More info</a></td> -->
+						</tr>
+					</tbody>
+				</table>
+				<a href="..">Back to user home</a>
+			</section>
+			<br />
+			<%- include("./partials/footer"); %>
+		</div>
+	</body>
+
+	<script>
+		fetch("http://localhost:8000/api/orders/?format=json")
+			.then((response) => response.json())
+			.then((data) => {
+				console.log(data);
+			});
+	</script>
+</html>

@@ -220,6 +220,10 @@ def getCheckout(request):
 @admin_required
 def adminViewOrders(request):
     allOrders = Order.objects.all()
+    httpform = request.GET.get("format", "")
+    if httpform == "json":
+        serialOrders = serializers.serialize("json", allOrders)
+        return HttpResponse(serialOrders, content_type="application/json")
     return render(request, "all-orders.html", {"orders": allOrders})
 
 
@@ -236,9 +240,20 @@ def userHomeView(request):
     return render(request, "account.html")
 
 
-@login_required
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def myOrders(request):
-    orders = Order.objects.filter(userID=request.user)
+    user = request.user
+    if user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
+
+    orders = Order.objects.filter(userID=user)
+    httpform = request.GET.get("format", "")
+    if httpform == "json":
+        serialOrders = serializers.serialize("json", orders)
+        return HttpResponse(serialOrders, content_type="application/json")
+
     return render(request, "all-orders.html", {"orders": orders})
 
 
@@ -257,5 +272,11 @@ class UserViewSet(viewsets.ModelViewSet):
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    authentication_classes = []
+    permission_classes = []
+
+class OrderViewSet(viewsets.ModelViewSet):
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
     authentication_classes = []
     permission_classes = []

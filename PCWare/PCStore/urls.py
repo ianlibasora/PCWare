@@ -8,6 +8,7 @@ from rest_framework.authtoken.views import obtain_auth_token
 router = routers.DefaultRouter()
 router.register(r"users", views.UserViewSet)
 router.register(r"products", views.ProductViewSet)
+router.register(r"orders", views.OrderViewSet)
 
 urlpatterns = [
     path('', views.index, name="index-page"),
