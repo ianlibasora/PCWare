@@ -61,5 +61,15 @@
 				container.appendChild(cardPad)
 			})
 		})
+
+		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
+			let log = document.getElementById("login-logout")
+			log.innerHTML = "Logout"
+			log.href = "/account/logout"
+
+			let ac = document.getElementById("account-register")
+			ac.innerHTML = "Account"
+			ac.href = "/account/"
+		}
 	</script>
 </html>

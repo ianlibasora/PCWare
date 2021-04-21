@@ -88,14 +88,14 @@
 			true
 		)
 
-		// --- NEED TO IMPROVE AT A LATER STAGE ------
-		if (sessionStorage.getItem("Token") != null) {
+		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
 			let log = document.getElementById("login-logout")
 			log.innerHTML = "Logout"
-			// HANDLE LOGOUT OPERATION
+			log.href = "/account/logout"
+
 			let ac = document.getElementById("account-register")
 			ac.innerHTML = "Account"
-			ac.href = "/account/register"
+			ac.href = "/account/"
 		}
 
 		function addCart(productID) {

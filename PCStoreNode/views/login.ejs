@@ -36,10 +36,11 @@
 								/>
 							</div>
 							<br />
-							<input type="submit" value="Confirm" />
+							<input type="submit" value="Login" class="btn btn-primary"/>
 						</form>
 					</div>
 				</div>
+				<br>
 			</section>
 			<%- include("./partials/footer"); %>
 		</div>
@@ -57,24 +58,20 @@
 				fetch("http://localhost:8000/token/", {
 					method: "POST",
 					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-						// 'Authorization': `Token ${auth_token}`
+						"Accept": "application/json",
+						"Content-Type": "application/json"
 					},
-					body: JSON.stringify({ username: user, password: pass }),
+					body: JSON.stringify({"username": user, "password": pass})
 				})
-					.then((response) => response.json())
-					.then(function (data) {
-						window.token = data;
-						console.log(window.token);
-						if (data != "undefined" || data != "null") {
-							alert("You are now signed in!");
-							sessionStorage.setItem("Token", window.token.token);
-							window.location.replace("/");
-						} else {
-							alert("There is a issue logging in.");
-						}
-					});
+				.then((response) => response.json())
+				.then(data => {
+					if (data["token"] !== undefined) {
+						sessionStorage.setItem("Token", data["token"])
+						window.location.replace("/")
+					} else {
+						alert("Invalid login")
+					}
+				});
 			},
 			true
 		);
