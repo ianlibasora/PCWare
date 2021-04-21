@@ -252,8 +252,15 @@ def adminOrderMoreInfo(request, orderID):
     return render(request, "order-info.html", {"order": order, "orderItems": orderItems})
 
 
-@login_required
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def userHomeView(request):
+    if request.user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
+        if user.is_superuser or user.isAdmin:
+            return HttpResponse(json.dumps({"admin": 1}), content_type="application/json")
+        return HttpResponse(json.dumps({"admin": 0}), content_type="application/json")
     return render(request, "account.html")
 
 

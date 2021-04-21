@@ -13,7 +13,7 @@
 				<div class="row row-cols-auto p-1 gy-3">
 					<div class="col-sm-4">
 						<div class="card h-100 m-2">
-							<a href="account/my-orders/"
+							<a href="my-orders/"
 								><img
 									src="/imgs/document.png"
 									class="card-img-top p-2 img-thumbnail"
@@ -27,9 +27,9 @@
 						</div>
 					</div>
 
-					<div class="col-sm-4">
+					<div id="admin-order-card" class="col-sm-4" style="display: none">
 						<div class="card h-100 m-2">
-							<a href="account/all-orders/"
+							<a href="all-orders/"
 								><img
 									src="/imgs/document.png"
 									class="card-img-top p-2 img-thumbnail"
@@ -68,6 +68,25 @@
 			let ac = document.getElementById("account-register")
 			ac.innerHTML = "Account"
 			ac.href = "/account/"
+
+			// Check if user is admin
+			fetch("http://localhost:8000/account/", {
+				method: "GET",
+				headers: {
+					"Content-Type": "application/json",
+					"Accept": "application/json",
+					"Authorization": sessionStorage.getItem("Token")
+				},
+			})
+			.then(resp => resp.json())
+			.then(data => {
+				if (data["admin"]) {
+					document.getElementById("admin-order-card").style.display = "block"
+				}
+			})
+		} else {
+			// User must be logged in
+			window.location.replace("/account/login")
 		}
 	</script>
 </html>
