@@ -94,7 +94,7 @@
 		.catch(err => alert("Error. Invalid productID"))
 
 		function addCart(productID) {
-			if (sessionStorage.getItem("Token") != null) {
+			if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
 				fetch(
 					`http://localhost:8000/basket/add-cart/${productID}`, 
 					{
@@ -107,8 +107,18 @@
 					}
 				).then(resp => window.location.replace("/all-products"));
 			} else {
-				alert("Login Required");
+				window.location.replace("/account/login")
 			}
+		}
+
+		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
+			let log = document.getElementById("login-logout")
+			log.innerHTML = "Logout"
+			log.href = "/account/logout"
+
+			let ac = document.getElementById("account-register")
+			ac.innerHTML = "Account"
+			ac.href = "/account/"
 		}
 	</script>
 </html>
