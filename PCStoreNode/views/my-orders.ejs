@@ -21,7 +21,7 @@
 						</tr>
 					</thead>
 					<tbody id="tableBody">
-						<!-- --- Dynamic insertion --- -->
+						<!-- Dynamic insertion -->
 					</tbody>
 				</table>
 				<a href="..">Back to user home</a>
@@ -74,13 +74,13 @@
 				})
 			})
 		} else {
-			window.location.replace("/account/login")
+			window.location.replace("/account/login/")
 		}
 
 		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
 			let log = document.getElementById("login-logout")
 			log.innerHTML = "Logout"
-			log.href = "/account/logout"
+			log.href = "/account/logout/"
 
 			let ac = document.getElementById("account-register")
 			ac.innerHTML = "Account"

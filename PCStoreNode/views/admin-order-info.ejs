@@ -65,14 +65,7 @@
 						</tr>
 					</thead>
 					<tbody id="items-table">
-						<!-- {% for p in orderItems %}
-						<tr>
-							<td>{{ p.quantity }}</td>
-							<td><a href="/single-product/{{ p.productID.productID }}">{{ p.productID.productName }}</a></td>
-							<td>{{ p.productID.price }}</td>
-							<td>{{ p.total }}</td>
-						</tr>
-						{% endfor %} -->
+						<!-- Dynamic insertion -->
 					</tbody>
 					<tfoot>
 						<tr>
@@ -92,13 +85,13 @@
 		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
 			let log = document.getElementById("login-logout")
 			log.innerHTML = "Logout"
-			log.href = "/account/logout"
+			log.href = "/account/logout/"
 
 			let ac = document.getElementById("account-register")
 			ac.innerHTML = "Account"
 			ac.href = "/account/"
 		} else {
-			window.location.replace("/account/login")
+			window.location.replace("/account/login/")
 		}
 
 		fetch(`http://localhost:8000/account/admin-view-orders/order-info/<%= orderID %>?format=json`, {
@@ -158,6 +151,9 @@
 				itemsTable.appendChild(row)
 			})
 		})
-		.catch(stder => alert("Invalid orderID"))
+		.catch(stder => {
+			alert("Invalid orderID")
+			window.location.replace("/account/")
+		})
 	</script>
 </html>
