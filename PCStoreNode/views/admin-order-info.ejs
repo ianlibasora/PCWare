@@ -123,7 +123,7 @@
 			document.getElementById("addr-2").innerHTML = data["address"]["fields"]["line2"]
 			document.getElementById("addr-3").innerHTML = data["address"]["fields"]["line3"]
 			document.getElementById("postcode").innerHTML = data["address"]["fields"]["postcode"]
-			document.getElementById("order-total").innerHTML = data["order"]["orderTotal"]
+			document.getElementById("order-total").innerHTML = data["order"]["orderTotal"].toFixed(2)
 
 			let itemsTable = document.getElementById("items-table")
 			data["orderProducts"].forEach(product => {
@@ -141,11 +141,11 @@
 				row.appendChild(productName)
 
 				let price = document.createElement("td")
-				price.innerHTML = product["price"]
+				price.innerHTML = product["price"].toFixed(2)
 				row.appendChild(price)
 
 				let total = document.createElement("td")
-				total.innerHTML = product["total"]
+				total.innerHTML = product["total"].toFixed(2)
 				row.appendChild(total)
 
 				itemsTable.appendChild(row)

@@ -272,10 +272,10 @@ def adminOrderMoreInfo(request, orderID):
             payload = {
                 "Response": 1,
                 "user": {
-                    "firstName": user.first_name,
-                    "lastName": user.last_name,
-                    "email": user.email,
-                    "contact": user.contactNum
+                    "firstName": order.userID.first_name,
+                    "lastName": order.userID.last_name,
+                    "email": order.userID.email,
+                    "contact": order.userID.contactNum
                 },
                 "order": {
                     "orderID": order.orderID,
