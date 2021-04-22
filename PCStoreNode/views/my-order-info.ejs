@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<%- include("./partials/header"); %>
+	</head>
+	<body>
+		<%- include("./partials/navbar"); %>
+
+		<div class="content-section">
+			<section class="container">
+				<br>
+				<h2>Order Details</h2>
+		  
+				<br><br>
+				<h4>User Details</h4>
+				<table class="table table-light table-striped">
+					<thead>
+						<tr>
+							<th class="col">Name</th>
+							<th id="User" class="col">John Doe</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Contact number</td>
+							<td id="contact">9999999999999</td>
+						</tr>
+						<tr>
+							<td>Email</td>
+							<td id="email">john.doe@pcware.com</td>
+						</tr>
+						<tr>
+							<td>Order Date</td>
+							<td id="date">XX.XX.XX</td>
+						</tr>
+						<tr>
+							<td>Shipping Address</td>
+							<td id="addr-1">Lorem Ipsum</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td id="addr-2">Lorem Ipsum</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td id="addr-3">Lorem Ipsum</td>
+						</tr>
+						<tr>
+							<td>&nbsp;</td>
+							<td id="postcode">Lorem Ipsum</td>
+						</tr>
+					</tbody>
+				</table>
+		  
+				<br>
+		  
+				<h4>Order Number: <% orderID %></h4>
+				<table class="table table-light table-striped">
+					<thead>
+						<tr>
+							<th class="col">Quantity</th>
+							<th class="col">Product</th>
+							<th class="col">Unit Price (€)</th>
+							<th class="col">Total (€)</th>
+						</tr>
+					</thead>
+					<tbody id="items-table">
+						<!-- Dynamic insertion -->
+					</tbody>
+					<tfoot>
+						<tr>
+							<td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td>
+							<td id="order-total">0000000.00</td>
+						</tr>
+					</tfoot>
+				</table>
+		  
+				<a href="..">Back to orders</a>
+			</section>
+		</div>
+		<%- include("./partials/footer"); %>
+	</body>
+
+	<script>
+		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
+			let log = document.getElementById("login-logout")
+			log.innerHTML = "Logout"
+			log.href = "/account/logout"
+
+			let ac = document.getElementById("account-register")
+			ac.innerHTML = "Account"
+			ac.href = "/account/"
+		} else {
+			window.location.replace("/account/login")
+		}
+
+		fetch(`http://localhost:8000/account/my-orders/order-info/<%= orderID %>?format=json`, {
+			method: "GET",
+			headers: {
+				"Content-Type": "application/json",
+				"Accept": "application/json",
+				"Authorization": sessionStorage.getItem("Token")
+			}
+		})
+		.then(resp => {
+			if (!resp.ok) {
+				throw new Error("Fetch error");
+			} else {
+				return resp.json()		
+			}
+		})
+		.then(data => {
+			document.getElementById("User").innerHTML = `${data["user"]["firstName"]} ${data["user"]["lastName"]}`
+			document.getElementById("contact").innerHTML = data["user"]["contact"]
+			document.getElementById("email").innerHTML = data["user"]["email"]
+			document.getElementById("date").innerHTML = new Date(data["order"]["date"]).toUTCString()
+			document.getElementById("addr-1").innerHTML = data["address"]["fields"]["line1"]
+			document.getElementById("addr-2").innerHTML = data["address"]["fields"]["line2"]
+			document.getElementById("addr-3").innerHTML = data["address"]["fields"]["line3"]
+			document.getElementById("postcode").innerHTML = data["address"]["fields"]["postcode"]
+			document.getElementById("order-total").innerHTML = data["order"]["orderTotal"]
+
+			let itemsTable = document.getElementById("items-table")
+			data["orderProducts"].forEach(product => {
+				let row = document.createElement("tr")
+
+				let quantity = document.createElement("td")
+				quantity.innerHTML = product["quantity"]
+				row.appendChild(quantity)
+
+				let productName = document.createElement("td")
+				let productLink = document.createElement("a")
+				productLink.href = `/single-product/${product["productID"]}`
+				productLink.innerHTML = product["productName"]
+				productName.appendChild(productLink)
+				row.appendChild(productName)
+
+				let price = document.createElement("td")
+				price.innerHTML = product["price"]
+				row.appendChild(price)
+
+				let total = document.createElement("td")
+				total.innerHTML = product["total"]
+				row.appendChild(total)
+
+				itemsTable.appendChild(row)
+			})
+		})
+		.catch(stder => {
+			alert("Invalid orderID")
+			window.location.replace("/account/")
+		})
+	</script>
+</html>

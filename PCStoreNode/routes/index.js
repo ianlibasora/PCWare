@@ -25,6 +25,11 @@ router.get('/account/my-orders', function(req, res, next) {
   res.render('my-orders', {title: 'PCStore - My Orders'});
 });
 
+router.get('/account/my-orders/my-order-info/:orderID', function(req, res, next) {
+  const orderID = req.params.orderID
+  res.render('my-order-info', {"title": 'PCStore - My Order Info', orderID});
+});
+
 router.get('/account/register', function(req, res, next) {
   res.render('register', {title: 'PCStore - Registration'});
 });

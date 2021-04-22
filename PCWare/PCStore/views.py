@@ -329,10 +329,44 @@ def myOrders(request):
     return render(request, "all-orders.html", {"orders": orders})
 
 
-@login_required
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def myOrderInfo(request, orderID):
-    order = get_object_or_404(Order, pk=orderID, userID=request.user)
+    user = request.user
+    if user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
+    order = get_object_or_404(Order, pk=orderID, userID=user)
     orderItems = OrderItem.objects.filter(orderID=order)
+
+    httpform = request.GET.get("format", "")
+    if httpform == "json":
+        payload = {
+            "user": {
+                "firstName": order.userID.first_name,
+                "lastName": order.userID.last_name,
+                "email": order.userID.email,
+                "contact": order.userID.contactNum
+            },
+            "order": {
+                "orderID": order.orderID,
+                "orderTotal": float(order.total),
+                "date": str(order.date)
+            },
+            "address": json.loads(serializers.serialize("json", [order.addressID]))[0]
+        }
+        orderProducts = []
+        for item in orderItems:
+            tmp = {
+                "quantity": item.quantity,
+                "total": float(item.total),
+                "productID": item.productID.productID,
+                "productName": item.productID.productName,
+                "price": float(item.productID.price)
+            }
+            orderProducts.append(tmp)
+        payload["orderProducts"] = orderProducts
+        return HttpResponse(json.dumps(payload), content_type="application/json")
     return render(request, "order-info.html", {"order": order, "orderItems": orderItems})
 
 
