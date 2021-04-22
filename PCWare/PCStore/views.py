@@ -243,7 +243,7 @@ def adminViewOrders(request):
         token = request.META.get("HTTP_AUTHORIZATION")
         user = get_object_or_404(Token, key=token).user
         if not user.is_superuser and not user.isAdmin:
-            return HttpResponse(json.dumps({"Response": "User is not an admin"}), content_type="application/json")
+            return HttpResponse(json.dumps({"Response": 0}), content_type="application/json")
 
         payload = []
         for order in allOrders:
@@ -252,15 +252,51 @@ def adminViewOrders(request):
                 "order": json.loads(serializers.serialize("json", [order]))[0]
             }
             payload.append(tmp)
-        return HttpResponse(json.dumps(payload), content_type="application/json")
+        return HttpResponse(json.dumps({"Response": 1, "orders": payload}), content_type="application/json")
     return render(request, "all-orders.html", {"orders": allOrders})
 
 
-@login_required
-@admin_required
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
 def adminOrderMoreInfo(request, orderID):
     order = get_object_or_404(Order, pk=orderID)
     orderItems = OrderItem.objects.filter(orderID=order)
+
+    user = request.user
+    httpform = request.GET.get("format", "")
+    if httpform == "json" and user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
+
+        if user.isAdmin or user.is_superuser:
+            payload = {
+                "Response": 1,
+                "user": {
+                    "firstName": user.first_name,
+                    "lastName": user.last_name,
+                    "email": user.email,
+                    "contact": user.contactNum
+                },
+                "order": {
+                    "orderID": order.orderID,
+                    "orderTotal": float(order.total),
+                    "date": str(order.date)
+                },
+                "address": json.loads(serializers.serialize("json", [order.addressID]))[0]
+            }
+            orderProducts = []
+            for item in orderItems:
+                tmp = {
+                    "quantity": item.quantity,
+                    "total": float(item.total),
+                    "productID": item.productID.productID,
+                    "productName": item.productID.productName,
+                    "price": float(item.productID.price)
+                }
+                orderProducts.append(tmp)
+            payload["orderProducts"] = orderProducts
+            return HttpResponse(json.dumps(payload), content_type="application/json")
+        return HttpResponse(json.dumps({"Response": 0}), content_type="application/json")
     return render(request, "order-info.html", {"order": order, "orderItems": orderItems})
 
 

@@ -42,6 +42,11 @@ router.get('/account/all-orders', function(req, res, next) {
   res.render('all-orders', {title: 'PCStore - All Orders'});
 });
 
+router.get('/account/all-orders/order-info/:orderID', function(req, res, next) {
+  const orderID = req.params.orderID
+  res.render('admin-order-info', {"title": 'PCStore - Admin Order Info', orderID});
+});
+
 // View basket
 router.get('/basket/view-basket', function(req, res, next) {
   res.render('basket', {title: 'PCStore - Basket'});
