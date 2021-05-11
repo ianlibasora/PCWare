@@ -5,89 +5,53 @@
 	</head>
 	<body>
 		<%- include("./partials/navbar"); %>
-
-		<h1><%= title %></h1>
-		<p>Welcome to <%= title %></p>
-
-		<table id="product-table">
-			<tr>
-				<td>Product Name</td>
-				<td>Category</td>
-				<td>Price</td>
-			</tr>
-
-		</table>
-
-		<form id="login-form" method=POST, action=".">
-		  	<label for="username">Username</label>
-			<input id="form-username" name="username" type="text" placeholder="Your Username">
-			<label for="password">Password</label>
-			<input type="password" name="password" id="form-password" placeholder="Your Password">
-			<input type="submit" value="login">
-		<form>
-
+		<div class="content-section">
+			<br><br>
+			<section class="container">
+				<div class="row justify-content-md-center">
+					<div id="carouselExampleDark" class="col col-lg-6 carousel carousel-dark slide card text-center fade-in" data-bs-ride="carousel">
+						<div class="carousel-indicators">
+							<button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+							<button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+							<button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+						</div>
+						<div class="carousel-inner">
+							<div class="carousel-item active" data-bs-interval="10000">
+								<a href="/all-products"><img src="/imgs/water_rgb_build.jpg" class="d-block w-100 slide-image-style" alt="Image of RGB watercooled PC"></a>
+								<div class="carousel-caption d-none d-md-block text-white">
+									<h2>CPUs</h2>
+								</div>
+							</div>
+							<div class="carousel-item" data-bs-interval="2000">
+								<a href="/all-products"><img src="/imgs/rgb_case.jpg" class="d-block w-100 slide-image-style" alt="Image of PC case with RGB fans"></a>
+								<div class="carousel-caption d-none d-md-block text-white">
+									<h2>Graphics Cards</h2>
+								</div>
+							</div>
+							<div class="carousel-item">
+								<a href="/all-products"><img src="/imgs/msi_rgb.jpg" class="d-block w-100 slide-image-style" alt="MSI RGB PC desk setup"></a>
+								<div class="carousel-caption d-none d-md-block text-white">
+									<h2>Peripherals</h2>
+								</div>
+							</div>
+						</div>
+						<button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark"  data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Previous</span>
+						</button>
+						<button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark"  data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Next</span>
+						</button>
+					</div>
+			  </div>
+			</section>
+			<br><br>
+		</div>
 		<%- include("./partials/footer"); %>
 	</body>
 
 	<script>
-		fetch("http://localhost:8000/api/products/?format=json").then(response => response.json()).then(data => {
-			console.log(data)
-			data.forEach(product => {
-				let table = document.getElementById("product-table")
-				let newRow = document.createElement("tr")
-				table.appendChild(newRow)
-
-				let pName = document.createElement("td")
-				pName.innerHTML = product["productName"]
-				newRow.appendChild(pName)
-
-				let cat = document.createElement("td")
-				cat.innerHTML = product["category"]
-				newRow.appendChild(cat)
-
-				let price = document.createElement("td")
-				price.innerHTML = product["price"]
-				newRow.appendChild(price)
-
-				let btnContainer = document.createElement("td")
-				let btn = document.createElement("button")
-				btn.innerHTML = "Add to cart"
-				btn.onclick = `addCart(${product["productID"]})`
-				btn.addEventListener("click", () => {
-					addCart(product["productID"])
-				});
-
-				btnContainer.appendChild(btn)
-				newRow.appendChild(btnContainer)
-			})
-		})
-
-		let loginform = document.getElementById("login-form")
-		loginform.addEventListener(
-			"submit", 
-			(event) => {
-				event.preventDefault();
-
-				let user = document.getElementById("form-username").value
-				let pass = document.getElementById("form-password").value
-				fetch("http://localhost:8000/token/", {
-					method:"POST",
-					headers: {
-							'Accept': 'application/json',
-							'Content-Type': 'application/json',
-							// 'Authorization': `Token ${auth_token}`
-						},
-						body:JSON.stringify({username:user, password:pass})
-				}).then(response => response.json()).then(function(data) {
-					console.log(data)
-					window.token = data
-					sessionStorage.setItem("Token", window.token.token)
-					console.log(window.token)
-				})
-			}, 
-			true
-		)
-
 		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
 			let log = document.getElementById("login-logout")
 			log.innerHTML = "Logout"
@@ -96,24 +60,6 @@
 			let ac = document.getElementById("account-register")
 			ac.innerHTML = "Account"
 			ac.href = "/account/"
-		}
-
-		function addCart(productID) {
-			if (window.token) {
-				fetch(
-					`http://localhost:8000/basket/add-cart/${productID}`, 
-					{
-						method: "GET",
-						headers: {
-							'Accept': 'application/json',
-							'Content-Type': 'application/json',
-							'Authorization': JSON.stringify(window.token)
-						}
-					}
-				).then(response => response.json()).then(data => console.log(data));
-			} else {
-				alert("Login Required");
-			}
 		}
 	</script>
 </html>
