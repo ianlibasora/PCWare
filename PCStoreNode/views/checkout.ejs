@@ -80,44 +80,48 @@
 		}
 
 		let checkoutBtn = document.getElementById("checkout-btn");
-		checkoutBtn.addEventListener("click", (event) => {
-			event.preventDefault();
+		checkoutBtn.addEventListener(
+			"click", 
+			(event) => {
+				event.preventDefault();
 
-			let holderName = document.getElementById("holderName").value
-			let cardNum = document.getElementById("cardNum").value
-			let expireMonth = document.getElementById("expireMonth").value
-			let expireYear = document.getElementById("expireYear").value
-			let cvv = document.getElementById("cvv").value
+				let holderName = document.getElementById("holderName").value
+				let cardNum = document.getElementById("cardNum").value
+				let expireMonth = document.getElementById("expireMonth").value
+				let expireYear = document.getElementById("expireYear").value
+				let cvv = document.getElementById("cvv").value
 
-			let addrLine1 = document.getElementById("line1").value
-			let addrLine2 = document.getElementById("line2").value
-			let addrLine3 = document.getElementById("line3").value
-			let postcode = document.getElementById("postcode").value
+				let addrLine1 = document.getElementById("line1").value
+				let addrLine2 = document.getElementById("line2").value
+				let addrLine3 = document.getElementById("line3").value
+				let postcode = document.getElementById("postcode").value
 
-			fetch("http://localhost:8000/basket/view-basket/checkout/?format=json", {
-				method: "POST",
-				headers: {
-					"Accept": "application/json",
-					"Content-Type": "application/json",
-					'Authorization': sessionStorage.getItem("Token")
-				},
-				body: JSON.stringify({
-					"holderName": holderName, 
-					"cardNum": cardNum,
-					"expireMonth": expireMonth,
-					"expireYear": expireYear,
-					"cvv": cvv,
-					"line1": addrLine1,
-					"line2": addrLine2,
-					"line3": addrLine3,
-					"postcode": postcode
+				fetch("http://localhost:8000/basket/view-basket/checkout/?format=json", {
+					method: "POST",
+					headers: {
+						"Accept": "application/json",
+						"Content-Type": "application/json",
+						'Authorization': sessionStorage.getItem("Token")
+					},
+					body: JSON.stringify({
+						"holderName": holderName, 
+						"cardNum": cardNum,
+						"expireMonth": expireMonth,
+						"expireYear": expireYear,
+						"cvv": cvv,
+						"line1": addrLine1,
+						"line2": addrLine2,
+						"line3": addrLine3,
+						"postcode": postcode
+					})
 				})
-			})
-			.then((resp) => resp.json())
-			.then(data => {
-				alert("Order confirmed")
-				window.location.replace(`/account/my-orders/my-order-info/${data["orderID"]}`)
-			});
-		}, true);
+				.then((resp) => resp.json())
+				.then(data => {
+					alert("Order confirmed")
+					window.location.replace(`/account/my-orders/my-order-info/${data["orderID"]}`)
+				});
+			}, 
+			true
+		);
 	</script>
 </html>

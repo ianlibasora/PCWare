@@ -24,8 +24,7 @@
 		<%- include("./partials/footer"); %>
 	</body>
 	<script>
-		fetch("http://localhost:8000/api/products/?format=json").then(response => response.json()).then(data => {
-			console.log(data)
+		fetch("http://localhost:8000/api/products/?format=json").then(resp => resp.json()).then(data => {
 			let container = document.getElementById("products-container")
 			data.forEach(product => {
 				let cardPad = document.createElement("div")

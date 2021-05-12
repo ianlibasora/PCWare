@@ -204,7 +204,7 @@ def showBasket(request):
             cartItemJSON.append(tmp)
 
         cartJSON["cartitems"] = cartItemJSON
-        return HttpResponse(json.dumps(cartJSON), content_type="application/json")
+        return JsonResponse(cartJSON)
     return render(request, 'basket.html', {"cart": cart, 'cartItem': cartItem, "Content": True})
 
 @authentication_classes([SessionAuthentication, BasicAuthentication])
@@ -269,7 +269,7 @@ def adminViewOrders(request):
                 "order": json.loads(serializers.serialize("json", [order]))[0]
             }
             payload.append(tmp)
-        return HttpResponse(json.dumps({"Response": 1, "orders": payload}), content_type="application/json")
+        return JsonResponse({"Response": 1, "orders": payload})
     return render(request, "all-orders.html", {"orders": allOrders})
 
 
@@ -312,8 +312,8 @@ def adminOrderMoreInfo(request, orderID):
                 }
                 orderProducts.append(tmp)
             payload["orderProducts"] = orderProducts
-            return HttpResponse(json.dumps(payload), content_type="application/json")
-        return HttpResponse(json.dumps({"Response": 0}), content_type="application/json")
+            return JsonResponse(payload)
+        return JsonResponse({"Response": 0})
     return render(request, "order-info.html", {"order": order, "orderItems": orderItems})
 
 
@@ -324,8 +324,8 @@ def userHomeView(request):
         token = request.META.get("HTTP_AUTHORIZATION")
         user = get_object_or_404(Token, key=token).user
         if user.is_superuser or user.isAdmin:
-            return HttpResponse(json.dumps({"username": user.username, "admin": 1}), content_type="application/json")
-        return HttpResponse(json.dumps({"username": user.username, "admin": 0}), content_type="application/json")
+            return JsonResponse({"username": user.username, "admin": 1})
+        return JsonResponse({"username": user.username, "admin": 0})
     return render(request, "account.html")
 
 
@@ -341,8 +341,7 @@ def myOrders(request):
     httpform = request.GET.get("format", "")
     if httpform == "json":
         serialOrders = json.loads(serializers.serialize("json", orders))
-        return HttpResponse(json.dumps({"username": user.username, "orders": serialOrders}), content_type="application/json")
-
+        return JsonResponse({"username": user.username, "orders": serialOrders})
     return render(request, "all-orders.html", {"orders": orders})
 
 
@@ -383,7 +382,7 @@ def myOrderInfo(request, orderID):
             }
             orderProducts.append(tmp)
         payload["orderProducts"] = orderProducts
-        return HttpResponse(json.dumps(payload), content_type="application/json")
+        return JsonResponse(payload)
     return render(request, "order-info.html", {"order": order, "orderItems": orderItems})
 
 
