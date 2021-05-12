@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<%- include("./partials/header"); %>
+	</head>
+	<body>
+		<%- include("./partials/navbar"); %>
+
+		<div class="content-section">
+			<br>
+			<section class="container">
+				<form id="checkout-form" method="POST" action=".">
+					<div class="container">
+						<div class="col-6">
+							<p style="font-size:30px">Payment Information</p>
+
+							<label for="holderName" class="requiredField">Card Owner Name<span class="asteriskField">*</span></label>
+							<input type="text" name="holderName" maxlength="200" class="textinput textInput form-control" required id="holderName">
+							
+							<label for="cardNum" class="requiredField">Card Number<span class="asteriskField">*</span></label>
+						  	<input type="number" name="cardNum" class="numberinput form-control" required id="cardNum">
+
+						  	<label for="expireMonth" class="requiredField">Expire Month<span class="asteriskField">*</span></label>
+							<input type="number" name="expireMonth" class="numberinput form-control" required id="expireMonth">
+
+							<label for="expireYear" class="requiredField">Expire Year<span class="asteriskField">*</span></label>
+							<input type="number" name="expireYear" class="numberinput form-control" required id="expireYear">
+							
+							<label for="cvv" class="requiredField">CVV<span class="asteriskField">*</span></label>
+							<input type="number" name="cvv" class="numberinput form-control" required id="cvv">
+						</div>
+					  	<br><br>
+						<div class="col-6">
+							<p style="font-size:30px">Shipping Information</p>
+
+							<label for="line1" class="requiredField">Address-line 1<span class="asteriskField">*</span></label>
+							<input type="text" name="line1" maxlength="100" class="textinput textInput form-control" required id="line1">
+
+							<label for="line2" class="requiredField">Address-line 2<span class="asteriskField">*</span></label>
+							<input type="text" name="line2" maxlength="100" class="textinput textInput form-control" required id="line2">
+                    
+							<label for="line3" class="requiredField">Address-line 3<span class="asteriskField">*</span></label>
+							<input type="text" name="line3" maxlength="100" class="textinput textInput form-control" required id="line3">
+
+							<label for="postcode" class="requiredField">Postcode<span class="asteriskField">*</span></label>
+							<input type="text" name="postcode" maxlength="10" class="textinput textInput form-control" required id="postcode">
+						</div>
+						</br>
+						<button id="checkout-btn" type="submit" class="btn btn-primary">Confirm order</button>
+					</div>
+				</form>
+			</section>
+			<br><br>
+		</div>
+		<%- include("./partials/footer"); %>
+	</body>
+	<script>
+		if (sessionStorage.getItem("Token") != null) {
+			fetch("http://localhost:8000/basket/view-basket?format=json", {
+				method: "GET",
+				headers: {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'Authorization': sessionStorage.getItem("Token")
+				}
+			}).then(resp => {
+				if (!resp.ok) {
+					throw new Error("Fetch error");
+				} else {
+					return resp.json()
+				}
+			})
+			.catch(err => {
+				// Redirect user back if cart is empty
+				alert("Cart is empty")
+				window.location.replace("/")	
+			})
+		} else {
+			window.location.replace("/account/login/")
+		}
+
+		let checkoutBtn = document.getElementById("checkout-btn");
+		checkoutBtn.addEventListener("click", (event) => {
+			event.preventDefault();
+
+			let holderName = document.getElementById("holderName").value
+			let cardNum = document.getElementById("cardNum").value
+			let expireMonth = document.getElementById("expireMonth").value
+			let expireYear = document.getElementById("expireYear").value
+			let cvv = document.getElementById("cvv").value
+
+			let addrLine1 = document.getElementById("line1").value
+			let addrLine2 = document.getElementById("line2").value
+			let addrLine3 = document.getElementById("line3").value
+			let postcode = document.getElementById("postcode").value
+
+			fetch("http://localhost:8000/basket/view-basket/checkout/?format=json", {
+				method: "POST",
+				headers: {
+					"Accept": "application/json",
+					"Content-Type": "application/json",
+					'Authorization': sessionStorage.getItem("Token")
+				},
+				body: JSON.stringify({
+					"holderName": holderName, 
+					"cardNum": cardNum,
+					"expireMonth": expireMonth,
+					"expireYear": expireYear,
+					"cvv": cvv,
+					"line1": addrLine1,
+					"line2": addrLine2,
+					"line3": addrLine3,
+					"postcode": postcode
+				})
+			})
+			.then((resp) => resp.json())
+			.then(data => {
+				alert("Order confirmed")
+				window.location.replace(`/account/my-orders/my-order-info/${data["orderID"]}`)
+			});
+		}, true);
+	</script>
+</html>

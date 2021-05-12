@@ -52,9 +52,13 @@ router.get('/account/all-orders/order-info/:orderID', function(req, res, next) {
   res.render('admin-order-info', {"title": 'PCStore - Admin Order Info', orderID});
 });
 
-// View basket
+// Basket handling
 router.get('/basket/view-basket', function(req, res, next) {
   res.render('basket', {title: 'PCStore - Basket'});
+});
+
+router.get('/basket/view-basket/checkout', function(req, res, next) {
+  res.render('checkout', {title: 'PCStore - Checkout'});
 });
 
 module.exports = router;

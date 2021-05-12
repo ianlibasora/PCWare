@@ -70,16 +70,13 @@ class AddressForm(ModelForm):
             'line3': forms.TextInput(attrs={'class': 'form-control'}),
             'postcode': forms.TextInput(attrs={'class': 'form-control'}),
         }
-
-        fields = ["line1", "line2", "line3", "postcode"]
-
         labels = {
             'line1': 'Address-line 1',
             'line2': 'Address-line 2',
             'line3': 'Address-line 3',
             'postcode': 'Postcode'
         }
-
+        fields = ["line1", "line2", "line3", "postcode"]
 
 class PaymentForm(ModelForm):
     class Meta:

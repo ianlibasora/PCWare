@@ -2,6 +2,7 @@ import json
 from django.contrib.sites import requests
 from django.shortcuts import render, get_object_or_404, redirect
 from django.template.response import TemplateResponse
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView
 from rest_framework import viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
@@ -11,7 +12,7 @@ from rest_framework.permissions import IsAuthenticated
 from .serializers import *
 from .models import *
 from .forms import *
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from .permissions import *
@@ -206,24 +207,42 @@ def showBasket(request):
         return HttpResponse(json.dumps(cartJSON), content_type="application/json")
     return render(request, 'basket.html', {"cart": cart, 'cartItem': cartItem, "Content": True})
 
-@login_required
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
 def getCheckout(request):
+    user = request.user
+    httpform = request.GET.get("format", "")
+    if user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
+
+
     if request.method == 'POST':
-        address_form = AddressForm(request.POST)
-        payment_form = PaymentForm(request.POST)
+        if not request.POST:
+            bodyUnicode = request.body.decode("utf-8")
+            body = json.loads(bodyUnicode)
+            address_form = AddressForm(body)
+            payment_form = PaymentForm(body)
+        else:
+            address_form = AddressForm(request.POST)
+            payment_form = PaymentForm(request.POST)
 
         if address_form.is_valid() and payment_form.is_valid():
             addr = address_form.save()
             pay = payment_form.save()
 
-            cart = Cart.objects.filter(userID=request.user).first()
+            cart = Cart.objects.filter(userID=user).first()
             cartItems = CartItem.objects.filter(cartID=cart)
-            Order(userID=request.user, addressID=addr, paymentID=pay, total=cart.total).save()
-            order = Order.objects.filter(userID=request.user).last()
+            Order(userID=user, addressID=addr, paymentID=pay, total=cart.total).save()
+            order = Order.objects.filter(userID=user).last()
 
             for item in cartItems:
                 OrderItem(orderID=order, productID=item.productID, quantity=item.quantity, total=item.total).save()
             cart.delete()
+
+            if httpform == "json":
+                return JsonResponse({"orderID": order.orderID})
 
             orderItems = OrderItem.objects.filter(orderID=order)
             return render(request, 'order-complete.html', {'order': order, "orderItems": orderItems})
