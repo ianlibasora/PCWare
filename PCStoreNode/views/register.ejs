@@ -11,7 +11,7 @@
 				<br>
 				<div class="container">
 					<div class="col-6">
-						<h3>Register a new user</h3>
+						<h3>Sign Up</h3>
 						<form id="register-form" method="POST" action=".">
 							<label for="username" class="requiredField">Username<span class="asteriskField">*</span></label>
 							<input type="text" name="username" maxlength="150" autocapitalize="none" autocomplete="username" autofocus class="textinput textInput form-control" required id="username">
@@ -46,9 +46,9 @@
 	</body>
 
 	<script>
-		let registerBtn = document.getElementById("register-btn");
-		registerBtn.addEventListener(
-			"click", 
+		let registerForm = document.getElementById("register-form");
+		registerForm.addEventListener(
+			"submit", 
 			(event) => {
 				event.preventDefault();
 
@@ -65,22 +65,18 @@
 				} else if (password1 != password2) {
 					alert("Password must be the same!");
 				} else {
+					let payload = new FormData();
+					payload.append("username", username)
+					payload.append("first_name", first_name)
+					payload.append("last_name", last_name)
+					payload.append("email", email)
+					payload.append("contactNum", contactNum)
+					payload.append("password1", password1)
+					payload.append("password2", password2)
 
-					fetch("http://localhost:8000/test/register/", {
+					fetch("http://localhost:8000/account/register/?format=json", {
 						method: "POST",
-						headers: {
-							"Accept": "application/json",
-							"Content-Type": "application/json"
-						},
-						body: JSON.stringify({
-							"username": username,
-							"first_name": first_name,
-							"last_name": last_name,
-							"email": email,
-							"contactNum": contactNum,
-							"password1": password1,
-							"password2": password2
-						}),
+						body: payload
 					})
 					.then(resp => {
 						console.log(resp)
@@ -90,7 +86,7 @@
 						console.log(data)
 					})
 
-
+					// finalise when tokens are handled
 					// window.location.replace("/");
 				}
 			},
