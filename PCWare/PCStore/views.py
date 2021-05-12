@@ -88,7 +88,7 @@ class UserSignUp(CreateView):
     def form_valid(self, form):
         user = form.save()
         # insert token generator here
-        token = ""
+        token = Token.objects.create(user=user).save()
 
         if self.request.GET["format"] == "json":
             return JsonResponse({"Token": token})
