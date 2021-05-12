@@ -21,19 +21,17 @@ from django.core import serializers
 from django.http import HttpResponse
 
 
-# Create your views here.
-
-
 def index(request):
     return render(request, "index.html")
 
 
+# ------ Product Views ------
 def allProducts(request):
     all_p = Product.objects.all()
     httpform = request.GET.get("format", "")
     if httpform == "json":
         serialProducts = serializers.serialize("json", all_p)
-        return HttpResponse(serialProducts, content_type="application/json")
+        return JsonResponse(serialProducts)
     return render(request, 'all-products.html', {'products': all_p, "Message": None})
 
 
@@ -45,10 +43,11 @@ def singleProduct(request, prodId):
             "product": json.loads(serializers.serialize("json", [prod]))[0],
             "category": json.loads(serializers.serialize("json", [prod.category]))[0]
         }
-        return HttpResponse(json.dumps(payload), content_type="application/json")
+        return JsonResponse(payload)
     return render(request, 'single-product.html', {'product': prod})
 
 
+# ------ Product/Category insertion forms (django only) ------
 @login_required
 @admin_required
 def productCategoryForm(request):
@@ -77,15 +76,14 @@ def productForm(request):
         return render(request, 'product-form.html', {'form': form})
 
 
+# ------ User Management ------
 class UserSignUp(CreateView):
     model = User
     form_class = UserSignUpForm
     template_name = "register.html"
 
-
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
-
 
     def form_valid(self, form):
         user = form.save()
@@ -98,28 +96,9 @@ class UserSignUp(CreateView):
         login(self.request, user)
         return redirect("/")
 
-
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         return super(UserSignUp, self).dispatch(request, *args, **kwargs)
-
-
-@csrf_exempt
-def RegistrationView(request):
-    if request.method == 'POST':
-        serializer = RegistrationSerializer(data=request.body.decode("utf-8"))
-        data = {}
-
-        if serializer.is_valid():
-            user = serializer.save()
-            data['response'] = "Successfully registered a new user."
-            data['email'] = user.email
-            data['username'] = user.username
-        else:
-            data = serializer.errors
-        return JsonResponse(data)
-    else:
-        return redirect("/")
 
 
 class Login(LoginView):
@@ -127,9 +106,92 @@ class Login(LoginView):
 
 
 def logout_view(request):
-    Cart.objects.filter(userID=request.user).delete()
+    user = request.user
+    if user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
+    Cart.objects.filter(userID=user).delete()
     logout(request)
     return redirect('/')
+
+
+# ------ Basket/Checkout Management ------
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+def showBasket(request):
+    user = request.user
+    if user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
+    cart = Cart.objects.filter(userID=user).first()
+
+    if cart is None:
+        return render(request, 'basket.html', {'Content': False})
+
+    cartItem = CartItem.objects.filter(cartID=cart.cartID)
+    if cartItem is None:
+        return render(request, 'basket.html', {'Content': False})
+
+    httpform = request.GET.get("format", "")
+    if httpform == "json":
+        cartJSON = {
+            "total": float(cart.total)
+        }
+        cartItemJSON = []
+        for item in cartItem:
+            tmp = {
+                "quantity": item.quantity,
+                "total": float(item.total),
+                "product": json.loads(serializers.serialize("json", [item.productID]))[0],
+                "category": json.loads(serializers.serialize("json", [item.productID.category]))[0]
+            }
+            cartItemJSON.append(tmp)
+
+        cartJSON["cartitems"] = cartItemJSON
+        return JsonResponse(cartJSON)
+    return render(request, 'basket.html', {"cart": cart, 'cartItem': cartItem, "Content": True})
+
+
+@authentication_classes([SessionAuthentication, BasicAuthentication])
+@permission_classes([IsAuthenticated])
+@csrf_exempt
+def getCheckout(request):
+    user = request.user
+    httpform = request.GET.get("format", "")
+    if user.is_anonymous:
+        token = request.META.get("HTTP_AUTHORIZATION")
+        user = get_object_or_404(Token, key=token).user
+
+    if request.method == 'POST':
+        if not request.POST:
+            bodyUnicode = request.body.decode("utf-8")
+            body = json.loads(bodyUnicode)
+            address_form = AddressForm(body)
+            payment_form = PaymentForm(body)
+        else:
+            address_form = AddressForm(request.POST)
+            payment_form = PaymentForm(request.POST)
+
+        if address_form.is_valid() and payment_form.is_valid():
+            addr = address_form.save()
+            pay = payment_form.save()
+
+            cart = Cart.objects.filter(userID=user).first()
+            cartItems = CartItem.objects.filter(cartID=cart)
+            Order(userID=user, addressID=addr, paymentID=pay, total=cart.total).save()
+            order = Order.objects.filter(userID=user).last()
+
+            for item in cartItems:
+                OrderItem(orderID=order, productID=item.productID, quantity=item.quantity, total=item.total).save()
+            cart.delete()
+
+            if httpform == "json":
+                return JsonResponse({"orderID": order.orderID})
+
+            orderItems = OrderItem.objects.filter(orderID=order)
+            return render(request, 'order-complete.html', {'order': order, "orderItems": orderItems})
+    else:
+        return render(request, 'checkout.html', {'address_form': AddressForm(), 'payment_form': PaymentForm()})
 
 
 @authentication_classes([SessionAuthentication, BasicAuthentication])
@@ -184,84 +246,17 @@ def removeCart(request, productID):
     return render(request, "all-products.html", {"products": allP, "Message": f"Removed {product.productName} from cart."})
 
 
+# ------ User Account/Order Info Pages Views ------
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
-def showBasket(request):
-    user = request.user
-    if user.is_anonymous:
+def userHomeView(request):
+    if request.user.is_anonymous:
         token = request.META.get("HTTP_AUTHORIZATION")
         user = get_object_or_404(Token, key=token).user
-    cart = Cart.objects.filter(userID=user).first()
-
-    if cart is None:
-        # Handle 404 in frontend
-        return render(request, 'basket.html', {'Content': False})
-
-    cartItem = CartItem.objects.filter(cartID=cart.cartID)
-    if cartItem is None:
-        # Handle 404 in frontend
-        return render(request, 'basket.html', {'Content': False})
-
-    httpform = request.GET.get("format", "")
-    if httpform == "json":
-        cartJSON = {
-            "total": float(cart.total)
-        }
-        cartItemJSON = []
-        for item in cartItem:
-            tmp = {
-                "quantity": item.quantity,
-                "total": float(item.total),
-                "product": json.loads(serializers.serialize("json", [item.productID]))[0],
-                "category": json.loads(serializers.serialize("json", [item.productID.category]))[0]
-            }
-            cartItemJSON.append(tmp)
-
-        cartJSON["cartitems"] = cartItemJSON
-        return JsonResponse(cartJSON)
-    return render(request, 'basket.html', {"cart": cart, 'cartItem': cartItem, "Content": True})
-
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
-@csrf_exempt
-def getCheckout(request):
-    user = request.user
-    httpform = request.GET.get("format", "")
-    if user.is_anonymous:
-        token = request.META.get("HTTP_AUTHORIZATION")
-        user = get_object_or_404(Token, key=token).user
-
-
-    if request.method == 'POST':
-        if not request.POST:
-            bodyUnicode = request.body.decode("utf-8")
-            body = json.loads(bodyUnicode)
-            address_form = AddressForm(body)
-            payment_form = PaymentForm(body)
-        else:
-            address_form = AddressForm(request.POST)
-            payment_form = PaymentForm(request.POST)
-
-        if address_form.is_valid() and payment_form.is_valid():
-            addr = address_form.save()
-            pay = payment_form.save()
-
-            cart = Cart.objects.filter(userID=user).first()
-            cartItems = CartItem.objects.filter(cartID=cart)
-            Order(userID=user, addressID=addr, paymentID=pay, total=cart.total).save()
-            order = Order.objects.filter(userID=user).last()
-
-            for item in cartItems:
-                OrderItem(orderID=order, productID=item.productID, quantity=item.quantity, total=item.total).save()
-            cart.delete()
-
-            if httpform == "json":
-                return JsonResponse({"orderID": order.orderID})
-
-            orderItems = OrderItem.objects.filter(orderID=order)
-            return render(request, 'order-complete.html', {'order': order, "orderItems": orderItems})
-    else:
-        return render(request, 'checkout.html', {'address_form': AddressForm(), 'payment_form': PaymentForm()})
+        if user.is_superuser or user.isAdmin:
+            return JsonResponse({"username": user.username, "admin": 1})
+        return JsonResponse({"username": user.username, "admin": 0})
+    return render(request, "account.html")
 
 
 @authentication_classes([SessionAuthentication, BasicAuthentication])
@@ -333,18 +328,6 @@ def adminOrderMoreInfo(request, orderID):
 
 @authentication_classes([SessionAuthentication, BasicAuthentication])
 @permission_classes([IsAuthenticated])
-def userHomeView(request):
-    if request.user.is_anonymous:
-        token = request.META.get("HTTP_AUTHORIZATION")
-        user = get_object_or_404(Token, key=token).user
-        if user.is_superuser or user.isAdmin:
-            return JsonResponse({"username": user.username, "admin": 1})
-        return JsonResponse({"username": user.username, "admin": 0})
-    return render(request, "account.html")
-
-
-@authentication_classes([SessionAuthentication, BasicAuthentication])
-@permission_classes([IsAuthenticated])
 def myOrders(request):
     user = request.user
     if user.is_anonymous:
@@ -400,6 +383,7 @@ def myOrderInfo(request, orderID):
     return render(request, "order-info.html", {"order": order, "orderItems": orderItems})
 
 
+# ------ API Viewsets ------
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -410,21 +394,3 @@ class ProductViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
     authentication_classes = []
     permission_classes = []
-
-
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
-    serializer_class = OrderSerializer
-    authentication_classes = []
-    permission_classes = []
-
-
-class RegisterViewSet(viewsets.ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = RegistrationSerializer
-
-
-class UserCreate(generics.CreateAPIView):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (AllowAny, )
