@@ -8,144 +8,94 @@
 
 		<div class="content-section">
 			<section class="container">
+				<br>
 				<div class="container">
 					<div class="col-6">
 						<h3>Register a new user</h3>
-						<form id="register-form" action="." method="POST">
-							<div class="form-group">
-								<label for="username">Username</label>
-								<input
-									id="form-username"
-									name="username"
-									class="form-control"
-									type="text"
-									placeholder="Your Username"
-									required
-								/>
-							</div>
+						<form id="register-form" method="POST" action=".">
+							<label for="username" class="requiredField">Username<span class="asteriskField">*</span></label>
+							<input type="text" name="username" maxlength="150" autocapitalize="none" autocomplete="username" autofocus class="textinput textInput form-control" required id="username">
 
-							<div class="form-group">
-								<label for="firstname">First Name</label>
-								<input
-									id="form-firstname"
-									name="first_name"
-									class="form-control"
-									type="text"
-									required
-								/>
-							</div>
+							<label for="first_name" class="requiredField">First Name<span class="asteriskField">*</span></label>
+							<input type="text" name="first_name" maxlength="50" class="textinput textInput form-control" required id="first_name">
 
-							<div class="form-group">
-								<label for="lastname">Last Name</label>
-								<input
-									id="form-lastname"
-									name="last_name"
-									class="form-control"
-									type="text"
-									placeholder="Doe"
-									required
-								/>
-							</div>
+							<label for="last_name" class="requiredField">Last Name<span class="asteriskField">*</span></label>
+							<input type="text" name="last_name" maxlength="50" class="textinput textInput form-control" required id="last_name">
 
-							<div class="form-group">
-								<label for="email">Email</label>
-								<input
-									id="form-email"
-									name="email"
-									type="email"
-									class="form-control"
-									required
-								/>
-							</div>
+							<label for="email" class="requiredField">Email<span class="asteriskField">*</span></label>
+							<input type="email" name="email" maxlength="254" class="emailinput form-control" required id="email">
 
-							<div class="form-group">
-								<label for="contactnumber">Contact Number</label>
-								<input
-									id="form-number"
-									name="contactNum"
-									class="form-control"
-									type="tel"
-									placeholder="i.e,. 08XXXXXXXX"
-									pattern="[0-9]{10}"
-									required
-								/>
-							</div>
+							<label for="contactNum" class="requiredField">Contact Number<span class="asteriskField">*</span></label>
+							<input type="number" name="contactNum" class="numberinput form-control" required id="contactNum">
 
-							<div class="form-group">
-								<label for="password">Password</label>
-								<input
-									id="form-password"
-									name="password"
-									class="form-control"
-									type="password"
-									placeholder="Your password"
-									required
-								/>
-							</div>
+							<label for="password1" class="requiredField">Password<span class="asteriskField">*</span></label>
+							<input type="password" name="password1" autocomplete="new-password" class="textinput textInput form-control" required id="password1">
 
-							<div class="form-group">
-								<label for="passwordconf">Password Confirmation</label>
-								<input
-									id="form-passwordconf"
-									name="passwordconf"
-									class="form-control"
-									type="password"
-									placeholder="Re-enter your password"
-									required
-								/>
-							</div>
-							<br />
-							<input type="submit" value="Confirm" />
+							<label for="password2" class="requiredField">Password confirmation<span class="asteriskField">*</span></label>
+							<input type="password" name="password2" autocomplete="new-password" class="textinput textInput form-control" required id="password2">
+
+							<br>
+							<button id="register-btn" type="submit" class="btn btn-primary">Confirm order</button>
 						</form>
 					</div>
 				</div>
-				<br />
+				<br>
 			</section>
 			<%- include("./partials/footer"); %>
 		</div>
 	</body>
 
 	<script>
-		let registerform = document.getElementById("register-form");
-		registerform.addEventListener("submit", (event) => {
-			event.preventDefault();
+		let registerBtn = document.getElementById("register-btn");
+		registerBtn.addEventListener(
+			"click", 
+			(event) => {
+				event.preventDefault();
 
-			let user = document.getElementById("form-username").value;
-			let fn = document.getElementById("form-firstname").value;
-			let ln = document.getElementById("form-lastname").value;
-			let emailInp = document.getElementById("form-email").value;
-			let number = document.getElementById("form-number").value;
-			let pass = document.getElementById("form-password").value;
-			let passconf = document.getElementById("form-passwordconf").value;
-			console.log(pass.length);
+				let username = document.getElementById("username").value;
+				let first_name = document.getElementById("first_name").value;
+				let last_name = document.getElementById("last_name").value;
+				let email = document.getElementById("email").value;
+				let contactNum = document.getElementById("contactNum").value;
+				let password1 = document.getElementById("password1").value;
+				let password2 = document.getElementById("password2").value;
 
-			if (pass.length < 8) {
-				alert("Password must have 8 or more characters!");
-			} else if (pass != passconf) {
-				alert("Password must be the same!");
-			} else {
-				alert("Account created!");
+				if (password1.length < 8) {
+					alert("Password must have 8 or more characters!");
+				} else if (password1 != password2) {
+					alert("Password must be the same!");
+				} else {
 
-				fetch("http://localhost:8000/account/register/", {
-					method: "POST",
-					headers: {
-						Accept: "application/json",
-						"Content-Type": "application/json",
-						// 'Authorization': `Token ${auth_token}`
-					},
-					body: JSON.stringify({
-						username: user,
-						first_name: fn,
-						last_name: ln,
-						email: emailInp,
-						contactNum: number,
-						password: pass,
-					}),
-				});
+					fetch("http://localhost:8000/test/register/", {
+						method: "POST",
+						headers: {
+							"Accept": "application/json",
+							"Content-Type": "application/json"
+						},
+						body: JSON.stringify({
+							"username": username,
+							"first_name": first_name,
+							"last_name": last_name,
+							"email": email,
+							"contactNum": contactNum,
+							"password1": password1,
+							"password2": password2
+						}),
+					})
+					.then(resp => {
+						console.log(resp)
+						return resp.json()
+					})
+					.then(data => {
+						console.log(data)
+					})
 
-				window.location.replace("/");
-			}
-		});
+
+					// window.location.replace("/");
+				}
+			},
+			true
+		);
 
 		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
 			let log = document.getElementById("login-logout")

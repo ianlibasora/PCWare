@@ -4,11 +4,11 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.template.response import TemplateResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import CreateView
-from rest_framework import viewsets
+from rest_framework import viewsets, generics
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .serializers import *
 from .models import *
 from .forms import *
@@ -82,30 +82,44 @@ class UserSignUp(CreateView):
     form_class = UserSignUpForm
     template_name = "register.html"
 
+
     def get_context_data(self, **kwargs):
         return super().get_context_data(**kwargs)
 
+
     def form_valid(self, form):
         user = form.save()
+        # insert token generator here
+        token = ""
+
+        if self.request.GET["format"] == "json":
+            return JsonResponse({"Token": token})
+
         login(self.request, user)
         return redirect("/")
 
 
-# @api_view(['POST',])
-# def RegistrationView(request):
-#     if request.method == 'POST':
-#         serializer = RegistrationSerializer(data=request.data)
-#         data = {}
-#
-#         if serializer.is_valid():
-#             user = serializer.save()
-#             data['response'] = "Successfully registered a new user."
-#             data['email'] = user.email
-#             data['username'] = user.username
-#         else:
-#             data = serializer.errors
-#
-#     return Response(data)
+    @csrf_exempt
+    def dispatch(self, request, *args, **kwargs):
+        return super(UserSignUp, self).dispatch(request, *args, **kwargs)
+
+
+@csrf_exempt
+def RegistrationView(request):
+    if request.method == 'POST':
+        serializer = RegistrationSerializer(data=request.body.decode("utf-8"))
+        data = {}
+
+        if serializer.is_valid():
+            user = serializer.save()
+            data['response'] = "Successfully registered a new user."
+            data['email'] = user.email
+            data['username'] = user.username
+        else:
+            data = serializer.errors
+        return JsonResponse(data)
+    else:
+        return redirect("/")
 
 
 class Login(LoginView):
@@ -408,3 +422,9 @@ class OrderViewSet(viewsets.ModelViewSet):
 class RegisterViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = RegistrationSerializer
+
+
+class UserCreate(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    permission_classes = (AllowAny, )

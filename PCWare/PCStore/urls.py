@@ -9,7 +9,7 @@ router = routers.DefaultRouter()
 router.register(r"users", views.UserViewSet)
 router.register(r"products", views.ProductViewSet)
 router.register(r"orders", views.OrderViewSet)
-router.register(r"register", views.RegisterViewSet)
+# router.register(r"register", views.RegisterViewSet)
 
 urlpatterns = [
     path('', views.index, name="index-page"),
@@ -42,4 +42,6 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     path("api/", include(router.urls)),
     path('token/', obtain_auth_token, name="api_token_auth"),
+
+    path("test/register/", views.RegistrationView, name="Test reg")
 ]
