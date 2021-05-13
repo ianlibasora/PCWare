@@ -87,32 +87,38 @@ class UserSignUp(CreateView):
 
     def form_valid(self, form):
         user = form.save()
-        # insert token generator here
-        token = Token.objects.create(user=user).save()
-
+        Token.objects.create(user=user).save()
+        token = get_object_or_404(Token, user=user).key
         if self.request.GET["format"] == "json":
-            return JsonResponse({"Token": token})
-
+            return JsonResponse({"token": token})
         login(self.request, user)
         return redirect("/")
 
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
-        return super(UserSignUp, self).dispatch(request, *args, **kwargs)
+        status = super(UserSignUp, self).dispatch(request, *args, **kwargs)
+        if request.GET["format"] == "json" and isinstance(status, TemplateResponse) and len(status.context_data["form"].errors) != 0:
+            payload = [err[0] for err in status.context_data["form"].errors.values()]
+            return JsonResponse({"errors": payload})
+        return status
 
 
 class Login(LoginView):
     template_name = 'login.html'
 
 
+@csrf_exempt
 def logout_view(request):
     user = request.user
     if user.is_anonymous:
         token = request.META.get("HTTP_AUTHORIZATION")
         user = get_object_or_404(Token, key=token).user
-    Cart.objects.filter(userID=user).delete()
-    logout(request)
-    return redirect('/')
+        Cart.objects.filter(userID=user).delete()
+        return redirect('/')
+    else:
+        Cart.objects.filter(userID=user).delete()
+        logout(request)
+        return redirect('/')
 
 
 # ------ Basket/Checkout Management ------

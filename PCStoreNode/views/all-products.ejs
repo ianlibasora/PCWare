@@ -6,13 +6,7 @@
 	<body>
 		<%- include("./partials/navbar"); %>
 		<div class="content-section">
-		
-			<br>
-			<%# if (Message != null) { %>
-				<!-- <p class="alert alert-info text-center" role="alert">{{ Message }}</p> -->
-			<%# } %>
-  
-			<br>
+			<br><br>
 			<section class="container">
 				<div id="products-container" class="row row-cols-auto p-1 gy-3">
 					<!-- Dynamic insertion -->
@@ -24,6 +18,16 @@
 		<%- include("./partials/footer"); %>
 	</body>
 	<script>
+		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
+			let log = document.getElementById("login-logout")
+			log.innerHTML = "Logout"
+			log.href = "/account/logout/"
+
+			let ac = document.getElementById("account-register")
+			ac.innerHTML = "Account"
+			ac.href = "/account/"
+		}
+
 		fetch("http://localhost:8000/api/products/?format=json").then(resp => resp.json()).then(data => {
 			let container = document.getElementById("products-container")
 			data.forEach(product => {
@@ -60,15 +64,5 @@
 				container.appendChild(cardPad)
 			})
 		})
-
-		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
-			let log = document.getElementById("login-logout")
-			log.innerHTML = "Logout"
-			log.href = "/account/logout/"
-
-			let ac = document.getElementById("account-register")
-			ac.innerHTML = "Account"
-			ac.href = "/account/"
-		}
 	</script>
 </html>

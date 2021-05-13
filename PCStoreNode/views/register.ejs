@@ -60,35 +60,38 @@
 				let password1 = document.getElementById("password1").value;
 				let password2 = document.getElementById("password2").value;
 
-				if (password1.length < 8) {
-					alert("Password must have 8 or more characters!");
-				} else if (password1 != password2) {
-					alert("Password must be the same!");
-				} else {
-					let payload = new FormData();
-					payload.append("username", username)
-					payload.append("first_name", first_name)
-					payload.append("last_name", last_name)
-					payload.append("email", email)
-					payload.append("contactNum", contactNum)
-					payload.append("password1", password1)
-					payload.append("password2", password2)
+				let payload = new FormData();
+				payload.append("username", username)
+				payload.append("first_name", first_name)
+				payload.append("last_name", last_name)
+				payload.append("email", email)
+				payload.append("contactNum", contactNum)
+				payload.append("password1", password1)
+				payload.append("password2", password2)
 
-					fetch("http://localhost:8000/account/register/?format=json", {
-						method: "POST",
-						body: payload
-					})
-					.then(resp => {
-						console.log(resp)
+				fetch("http://localhost:8000/account/register/?format=json", {
+					method: "POST",
+					body: payload
+				})
+				.then(resp => {
+					if (!resp.ok) {
+						throw new Error("Fetch error");
+					} else {
 						return resp.json()
-					})
-					.then(data => {
-						console.log(data)
-					})
+					}
+				})
+				.then(data => {
+					if (data["errors"] != undefined) {
+						alert(data["errors"][0])
+					} else {
+						sessionStorage.setItem("Token", data["token"])
+						window.location.replace("/")
+					}
+				})
+				.catch(stder => {
+					alert("Registration failed")
+				})
 
-					// finalise when tokens are handled
-					// window.location.replace("/");
-				}
 			},
 			true
 		);

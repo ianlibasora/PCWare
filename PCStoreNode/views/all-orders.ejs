@@ -40,11 +40,7 @@
 			let ac = document.getElementById("account-register")
 			ac.innerHTML = "Account"
 			ac.href = "/account/"
-		} else {
-			window.location.replace("/account/login/")
-		}
 
-		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
 			fetch("http://localhost:8000/account/admin-view-orders/?format=json", {
 				method: "GET",
 				headers: {

@@ -32,6 +32,16 @@
 	
 	</body>
 	<script>
+		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
+			let log = document.getElementById("login-logout")
+			log.innerHTML = "Logout"
+			log.href = "/account/logout"
+
+			let ac = document.getElementById("account-register")
+			ac.innerHTML = "Account"
+			ac.href = "/account/"
+		}
+
 		fetch(`http://localhost:8000/single-product/<%= productID %>?format=json`)
 		.then(resp => {
 			if (!resp.ok) {
@@ -109,16 +119,6 @@
 			} else {
 				window.location.replace("/account/login")
 			}
-		}
-
-		if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
-			let log = document.getElementById("login-logout")
-			log.innerHTML = "Logout"
-			log.href = "/account/logout"
-
-			let ac = document.getElementById("account-register")
-			ac.innerHTML = "Account"
-			ac.href = "/account/"
 		}
 	</script>
 </html>

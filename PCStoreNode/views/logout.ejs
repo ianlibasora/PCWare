@@ -1,4 +1,13 @@
 <script>
+	// Instruct django to also logout
+	fetch("http://localhost:8000/account/logout/", {
+		method: "POST",
+		headers: {
+			"Accept": "application/json",
+			"Content-Type": "application/json",
+			'Authorization': sessionStorage.getItem("Token")
+		},
+	})
 	sessionStorage.removeItem("Token");
 	window.location.replace("/");
 </script>
