@@ -123,11 +123,8 @@
 						"postcode": postcode
 					})
 				})
-				.then((resp) => resp.json())
-				.then(data => {
-					alert("Order confirmed")
-					window.location.replace(`/account/my-orders/my-order-info/${data["orderID"]}`)
-				});
+				.then(resp => resp.json())
+				.then(data => window.location.replace(`/account/my-orders/my-order-info/${data["orderID"]}`));
 			}, 
 			true
 		);

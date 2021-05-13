@@ -111,8 +111,8 @@
 		})
 		.then(data => {
 			if (data["Response"] == 0) {
-				alert("User is not an admin")
-				window.location.replace("/")
+				window.location.replace("/error")
+				// Send to dummy link to raise 404
 			}
 
 			document.getElementById("User").innerHTML = `${data["user"]["firstName"]} ${data["user"]["lastName"]}`
@@ -152,8 +152,8 @@
 			})
 		})
 		.catch(stder => {
-			alert("Invalid orderID")
-			window.location.replace("/account/")
+			window.location.replace("/error")
+			// Send to dummy link to raise 404
 		})
 	</script>
 </html>

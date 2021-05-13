@@ -101,7 +101,8 @@
 
 			dContainer.appendChild(addbtn)
 		})
-		.catch(err => alert("Error. Invalid productID"))
+		.catch(err => window.location.replace("/error"))
+		// Send to dummy link to raise a 404
 
 		function addCart(productID) {
 			if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
