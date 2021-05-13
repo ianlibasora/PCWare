@@ -113,10 +113,16 @@ def logout_view(request):
     if user.is_anonymous:
         token = request.META.get("HTTP_AUTHORIZATION")
         user = get_object_or_404(Token, key=token).user
-        Cart.objects.filter(userID=user).delete()
-        return redirect('/')
+        carts = Cart.objects.filter(userID=user)
+        if len(carts) != 0:
+            for cart in carts:
+                cart.delete()
+        return JsonResponse({"Response": "Logout"})
     else:
-        Cart.objects.filter(userID=user).delete()
+        carts = Cart.objects.filter(userID=user)
+        if len(carts) != 0:
+            for cart in carts:
+                cart.delete()
         logout(request)
         return redirect('/')
 
