@@ -97,7 +97,7 @@ class UserSignUp(CreateView):
     @csrf_exempt
     def dispatch(self, request, *args, **kwargs):
         status = super(UserSignUp, self).dispatch(request, *args, **kwargs)
-        if request.GET["format"] == "json" and isinstance(status, TemplateResponse) and len(status.context_data["form"].errors) != 0:
+        if "format" in request.GET and request.GET["format"] == "json" and isinstance(status, TemplateResponse) and len(status.context_data["form"].errors) != 0:
             payload = [err[0] for err in status.context_data["form"].errors.values()]
             return JsonResponse({"errors": payload})
         return status
