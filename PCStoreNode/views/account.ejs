@@ -83,6 +83,8 @@
 					document.getElementById("admin-order-card").style.display = "block"
 				}
 			})
+			.catch(stder => window.location.replace("/error"))
+			// Catch errors
 		} else {
 			// User must be logged in
 			window.location.replace("/account/login/")

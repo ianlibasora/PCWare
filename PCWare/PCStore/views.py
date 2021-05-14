@@ -117,7 +117,7 @@ def logout_view(request):
         if len(carts) != 0:
             for cart in carts:
                 cart.delete()
-        return JsonResponse({"Response": "Logout"})
+        return JsonResponse({"Response": 1})
     else:
         carts = Cart.objects.filter(userID=user)
         if len(carts) != 0:
@@ -211,6 +211,7 @@ def getCheckout(request):
 def addCart(request, productID):
     user = request.user
     all_p = Product.objects.all()
+    httpform = request.GET.get("format", "")
     if user.is_anonymous:
         token = request.META.get("HTTP_AUTHORIZATION")
         user = get_object_or_404(Token, key=token).user
@@ -232,6 +233,8 @@ def addCart(request, productID):
         cartItem.save()
     cart.save()
 
+    if httpform == "json":
+        return JsonResponse({"Response": 1})
     return render(request, 'all-products.html', {'products': all_p, "Message": f"Added {item.productName} to cart."})
 
 
@@ -239,6 +242,7 @@ def addCart(request, productID):
 @permission_classes([IsAuthenticated])
 def removeCart(request, productID):
     user = request.user
+    httpform = request.GET.get("format", "")
     if user.is_anonymous:
         token = request.META.get("HTTP_AUTHORIZATION")
         user = get_object_or_404(Token, key=token).user
@@ -255,6 +259,8 @@ def removeCart(request, productID):
     cart.delete() if len(CartItem.objects.filter(cartID=cart)) == 0 else cart.save()
     
     allP = Product.objects.all()
+    if httpform == "json":
+        return JsonResponse({"Response": 1})
     return render(request, "all-products.html", {"products": allP, "Message": f"Removed {product.productName} from cart."})
 
 

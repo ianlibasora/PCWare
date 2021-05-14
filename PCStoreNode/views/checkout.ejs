@@ -124,7 +124,9 @@
 					})
 				})
 				.then(resp => resp.json())
-				.then(data => window.location.replace(`/account/my-orders/my-order-info/${data["orderID"]}`));
+				.then(data => window.location.replace(`/account/my-orders/my-order-info/${data["orderID"]}`))
+				.catch(stder => window.location.replace("/error"))
+				// Catch errors
 			}, 
 			true
 		);

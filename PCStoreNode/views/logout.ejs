@@ -8,6 +8,21 @@
 			'Authorization': sessionStorage.getItem("Token")
 		},
 	})
-	sessionStorage.removeItem("Token");
-	window.location.replace("/");
+	.then(resp => {
+		if (!resp.ok) {
+			throw new Error("Fetch error");
+		} else {
+			return resp.json()		
+		}
+	})
+	.then(data => {
+		if (data["Response"] == 1) {
+			sessionStorage.removeItem("Token");
+			window.location.replace("/");
+		} else {
+			// Redirect errors to 404
+			window.location.replace("/error")
+		}
+	})
+	.catch(stder => window.location.replace("/error"))
 </script>

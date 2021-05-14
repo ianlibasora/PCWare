@@ -102,12 +102,12 @@
 			dContainer.appendChild(addbtn)
 		})
 		.catch(err => window.location.replace("/error"))
-		// Send to dummy link to raise a 404
+		// Catch error
 
 		function addCart(productID) {
 			if (sessionStorage.getItem("Token") != null || sessionStorage.getItem("Token") != undefined) {
 				fetch(
-					`http://localhost:8000/basket/add-cart/${productID}`, 
+					`http://localhost:8000/basket/add-cart/${productID}?format=json`, 
 					{
 						method: "GET",
 						headers: {
@@ -116,7 +116,22 @@
 							'Authorization': sessionStorage.getItem("Token")
 						}
 					}
-				).then(resp => window.location.replace("/all-products"));
+				).then(resp => {
+					if (!resp.ok) {
+						throw new Error("Fetch error");
+					} else {
+						return resp.json()
+					}
+				}).then(data => {
+					if (data["Response"] == 1) {
+						window.location.replace("/all-products")	
+					} else {
+						// Catch errors
+						window.location.replace("/error")
+					}
+				})
+				.catch(stder => window.location.replace("/error"))
+				// Catch errors
 			} else {
 				window.location.replace("/account/login")
 			}

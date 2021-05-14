@@ -81,6 +81,8 @@
 					tableBody.appendChild(row)
 				})
 			})
+			.catch(stder => window.location.replace("/error"))
+			// Catch errors
 		} else {
 			window.location.replace("/account/login/")
 		}
